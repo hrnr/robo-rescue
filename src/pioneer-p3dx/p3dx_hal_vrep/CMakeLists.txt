@@ -7,6 +7,7 @@ project(p3dx_hal_vrep)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  sensor_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -81,7 +82,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES p3dx_hal_vrep
-#  CATKIN_DEPENDS roscpp std_msgs
+   CATKIN_DEPENDS roscpp std_msgs sensor_msgs
 #  DEPENDS system_lib
 )
 
@@ -102,7 +103,7 @@ include_directories(
 # )
 
 ## Declare a cpp executable
-# add_executable(p3dx_hal_vrep_node src/p3dx_hal_vrep_node.cpp)
+# add_executable(p3dx_hal_vrep_talker src/talker.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -112,6 +113,17 @@ include_directories(
 # target_link_libraries(p3dx_hal_vrep_node
 #   ${catkin_LIBRARIES}
 # )
+
+add_executable(talker src/talker.cpp)
+target_link_libraries(talker ${catkin_LIBRARIES})
+add_dependencies(talker beginner_tutorials_generate_messages_cpp)
+
+add_executable(listener src/listener.cpp)
+target_link_libraries(listener ${catkin_LIBRARIES})
+add_dependencies(listener beginner_tutorials_generate_messages_cpp)
+
+add_executable(laser src/laser.cpp)
+target_link_libraries(laser ${catkin_LIBRARIES})
 
 #############
 ## Install ##
