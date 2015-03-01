@@ -1,0 +1,10 @@
+<!-- launch all hal nodes -->
+<launch>
+  <group ns="hal">
+    <!-- vrep robot's index -->
+    <param name="vrep_index" type="int" value="1" />
+
+    <!-- hal members -->
+    <node pkg="p3dx_hal_vrep" type="laser" name="laser" respawn="true" />
+  </group>
+</launch>

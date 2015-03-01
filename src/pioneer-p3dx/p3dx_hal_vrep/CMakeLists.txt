@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   sensor_msgs
+  roslaunch
 )
 
 ## System dependencies are found with CMake's conventions
@@ -130,6 +131,10 @@ target_link_libraries(laser ${catkin_LIBRARIES})
 ## Install ##
 #############
 
+# install roslaunch files
+install(DIRECTORY launch/
+	DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch)
+
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 
@@ -164,6 +169,9 @@ target_link_libraries(laser ${catkin_LIBRARIES})
 #############
 ## Testing ##
 #############
+
+# test all launch files
+roslaunch_add_file_check(launch)
 
 ## Add gtest based cpp test target and link libraries
 # catkin_add_gtest(${PROJECT_NAME}-test test/test_p3dx_hal_vrep.cpp)
