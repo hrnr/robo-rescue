@@ -132,6 +132,10 @@ add_executable(accelerometer src/accelerometer.cpp)
 add_dependencies(accelerometer StampedFloat32Array.msg)
 target_link_libraries(accelerometer ${catkin_LIBRARIES})
 
+add_executable(gyroscope src/gyroscope.cpp)
+add_dependencies(gyroscope StampedFloat32Array.msg)
+target_link_libraries(gyroscope ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############

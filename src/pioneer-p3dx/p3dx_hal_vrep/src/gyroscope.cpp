@@ -1,5 +1,5 @@
-#ifndef ACCEL_SUBSCRIB
-#define ACCEL_SUBSCRIB
+#ifndef GYRO_HAL
+#define GYRO_HAL
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "p3dx_hal_vrep/StampedFloat32Array.h"
@@ -28,7 +28,7 @@ void callback_val(const std_msgs::String::ConstPtr & msg) {
     // last element is added
     if(!value.empty()) axis_data.push_back(std::stof(value));
     if (axis_data.size() > 3){
-        ROS_ERROR("HAL(VREP): Accelerometer received more than three values(axis) from vrep");
+        ROS_ERROR("HAL(VREP): Gyroscope received more than three values(axis) from vrep");
         axis_data.resize(3);
     }
     // creating new message
@@ -42,17 +42,17 @@ void callback_val(const std_msgs::String::ConstPtr & msg) {
 
 int main(int argc, char ** argv) {
     // init node name as accelerometer
-    ros::init(argc, argv, "accelerometer");
+    ros::init(argc, argv, "gyroscope");
     // set relative node namespace
     ros::NodeHandle n("~");
     int robot_no = 0; // robot's index in vrep (if multiple instances)
     n.getParam("vrep_index", robot_no);
     // read msg from vrep topic
     ros::Subscriber sub_val = n.subscribe("/vrep/i" + std::to_string(robot_no) +
-        "_Pioneer_p3dx_Accelerometer", 1000, callback_val);
+        "_Pioneer_p3dx_GyroSensor", 1000, callback_val);
     // creates publisher
     publisher = n.advertise<p3dx_hal_vrep::StampedFloat32Array>("sensor" + std::to_string(robot_no)+"/axis_data", 1000);
-    ROS_INFO("HAL(VREP): Accelerometer node initialized");
+    ROS_INFO("HAL(VREP): Gyroscope node initialized");
     
     // run event loop
     ros::spin();
