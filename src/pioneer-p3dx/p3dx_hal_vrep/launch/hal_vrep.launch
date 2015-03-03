@@ -6,5 +6,6 @@
 
     <!-- hal members -->
     <node pkg="p3dx_hal_vrep" type="laser" name="laser" respawn="true" />
+    <node pkg="p3dx_hal_vrep" type="accelerometer" name="accelerometer" respawn="true" />
   </group>
 </launch>
