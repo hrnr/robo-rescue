@@ -1,29 +1,88 @@
 <?xml version="1.0"?>
-
+<!--NAMING CONVENTION
+	Robot links use this naming convention:
+	FOR SENSORS: 
+		robot_number/node_name(category of sensors)/sensor + number from 0 to n
+		example:
+			0/ultrasonicSensors/sensor0
+	FOR JOINTS (non fixed):
+		robot_number/node_name(category e.g. arm,base)/joint + number from 0 to n
+		example:
+			0/base/joint0
+	OTHER PARTS:
+		robot_number/part_name
+		example:
+			0/top_plate
+robot_number is accessed through variable ${robot_id}
+-->
 <robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
-	   xmlns:controller="http://playerstage.sourceforge.net/gazebo/
-	   xmlschema/#controller"
+	   xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
 	   xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
 	   xmlns:xacro="http://ros.org/wiki/xacro"
 	   >
 
-	<include filename="$(find p2os_urdf)/defs/pioneer3dx_wheel.xacro"/>
+	<!-- <xacro:include filename="$(find p3dx_urdf_model)/defs/pioneer3dx_wheel.xacro"/> -->
+	<!--  SET ROBOT NAME -->
+	<property name="robot_id" value="XX"/>
+	<!-- MACROS -->
+	<xacro:macro name="sonar" params= "id x y z roll pitch yaw" >
+		<link name="${robot_id}/ultrasonicSensors/sensor${id}">
+			<inertial>
+				<mass value="0.0001"/>	
+				<origin xyz="0 0 0"/>
+				<inertia ixx="1" ixy="0" ixz="0"
+					 iyy="1" iyz="0" izz="1"/>
+			</inertial>
+		</link>
+		<gazebo reference="${robot_id}/ultrasonicSensors/sensor${id}">
+			<material value="Gazebo/Yellow"/>
+		</gazebo>	
 
+		<joint name="${robot_id}/ultrasonicSensors/${id}_joint" type="fixed">
+			<origin xyz="${x} ${y} ${z}" rpy="${roll} ${pitch} ${yaw}"/>
+			<parent link="${robot_id}/base_link"/>
+			<child link="${robot_id}/ultrasonicSensors/sensor${id}"/>
+		</joint>
+	</xacro:macro>
+<!--  bumper macro -->
+	<xacro:macro name="bumper" params= "id x y z roll pitch yaw" >
+		<link name="${robot_id}/bumperSensors/sensor${id}">
+			<inertial>
+				<mass value="0.0001"/>	
+				<origin xyz="0 0 0"/>
+				<inertia ixx="1" ixy="0" ixz="0"
+					 iyy="1" iyz="0" izz="1"/>
+			</inertial>
+		</link>
+		<gazebo reference="${robot_id}/bumperSensors/sensor${id}">
+			<material value="Gazebo/Yellow"/>
+		</gazebo>	
+
+		<joint name="${robot_id}/bumperSensors/${id}_joint" type="fixed">
+			<origin xyz="${x} ${y} ${z}" rpy="${roll} ${pitch} ${yaw}"/>
+			<parent link="${robot_id}/base_link"/>
+			<child link="${robot_id}/bumperSensors/sensor${id}"/>
+		</joint>
+	</xacro:macro>
+
+
+
+<!-- *********************************** CHASIS ********************************************** -->
 	<!-- Chassis description -->
-	<link name="base_link">
+	<link name="${robot_id}/base_link">
 		<!-- CHECK THESE VALUES. THEY MAY BE COMPLETELY WRONG. -->
 		<inertial>
-			<mass value="40.0"/>
-			<origin xyz="-0.045 0 0.148"/>
+			<mass value="31.1"/>
+			<origin xyz="0 0 0.148"/>
 			<inertia ixx="0.3338" ixy="0.0" ixz="0.0"
 				 iyy="0.4783" iyz="0.0"
 				 izz="0.3338"/>
 		</inertial>
 		<!-- The base visual is fine. Just the inertial is questionable.-->
 		<visual name="pioneer_geom">
-			<origin xyz="-0.045 0 0.148" rpy="0 0 0"/>
+			<origin xyz="0 0 0.148" rpy="0 0 0"/>
 			<geometry name="pioneer_geom">
-				<mesh filename="package://p2os_urdf/meshes/p3dx_meshes/chassis.stl"/>
+				<mesh filename="package://p3dx_urdf_model/meshes/p3dx_meshes/chassis.stl"/>
 			</geometry>
 			<material name="ChassisRed">
 				<color rgba="0.851 0.0 0.0 1.0"/>
@@ -32,52 +91,46 @@
 		<collision>
 			<origin xyz="-0.045 0 0.148" rpy="0 0 0"/>
 				<geometry>
-					<mesh filename="package://p2os_urdf/meshes/p3at_meshes/chassis.stl"/>
+					<mesh filename="package://p3dx_urdf_model/meshes/p3dx_meshes/chassis.stl"/>
 				</geometry>
 		</collision>
 	</link>
-	<gazebo reference="base_link">
+	<gazebo reference="${robot_id}/base_link">
 		<material value="Gazebo/Red"/>
 	</gazebo>
-
-	<link name="top_plate">
+<!-- Top part of the robot -->
+	<link name="${robot_id}/top_plate">
 		<inertial>
 			<mass value="0.01"/>	
 			<origin xyz="0 0 0"/>
 			<inertia ixx="1" ixy="0" ixz="0"
-				 iyy="1" iyz="0"
- 				izz="1"/>
+				 iyy="1" iyz="0" izz="1"/>
 		</inertial>
 		<visual name="pioneer_geom">
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry name="pioneer_geom">
-				<mesh filename="package://p2os_urdf/meshes/p3dx_meshes/top.stl"/>
+				<mesh filename="package://p3dx_urdf_model/meshes/p3dx_meshes/top.stl"/>
 			</geometry>
 			<material name="TopBlack">
 					<color rgba="0.038 0.038 0.038 1.0"/>
 			</material>
 		</visual>
 	</link>
-	<gazebo reference="top_plate">
+	<gazebo reference="${robot_id}/top_plate">
 		<material value="Gazebo/Black"/>
 	</gazebo>
 
-	<joint name="base_top_joint" type="fixed">
-		<origin xyz="-0.045 0 0.24" rpy="0 0 0"/>
-		<parent link="base_link"/>
-		<child link="top_plate"/>
+	
+	<joint name="${robot_id}/base_top_joint" type="fixed">
+		<origin xyz="-0.0 0 0.24" rpy="0 0 0"/>
+		<parent link="${robot_id}/base_link"/>
+		<child link="${robot_id}/top_plate"/>
 	</joint>
 
-	<!-- Swivel -->
-	<joint name="base_swivel_joint" type="continuous">
-		<origin xyz="-0.185 0 0.055" rpy="0 0 0"/>
-		<anchor xyz="0 0 0"/>
-    	<limit effort="100" velocity="100" k_velocity="0" />
-    	<joint_properties damping="0.0" friction="0.0" />
-		<parent link="base_link"/>
-		<child link="swivel"/>
-	</joint>
-	<link name="swivel">
+
+
+<!-- ********************************************* CENTER WHEEL****************************************** -->
+<link name="${robot_id}/swivel">
 		<inertial>
 			<mass value="0.1"/>	
 			<origin xyz="0 0 0"/>
@@ -87,7 +140,7 @@
 	<visual name="pioneer_geom">
 		<origin xyz="0 0 0" rpy="0 0 0"/>
 		<geometry name="pioneer_geom">
-			<mesh filename="package://p2os_urdf/meshes/p3dx_meshes/swivel.stl"/>
+			<mesh filename="package://p3dx_urdf_model/meshes/p3dx_meshes/swivel.stl"/>
 		</geometry>
 		<material name="swivel">
 			<color rgba="0.5 0.5 0.5 1"/>
@@ -103,9 +156,8 @@
 	<gazebo reference="swivel">
 		<material value="Gazebo/Grey"/>
 	</gazebo>
-
 <!-- Center Wheel + Hubcap -->
-	<link name="center_hubcap">
+	<link name="${robot_id}/center_hubcap">
 		<inertial>
 			<mass value="0.01"/>	
 			<origin xyz="0 0 0"/>
@@ -115,7 +167,7 @@
 	<visual name="pioneer_geom">
 		<origin xyz="0 0 0" rpy="0 0 0"/>
 		<geometry name="pioneer_geom">
-			<mesh filename="package://p2os_urdf/meshes/p3dx_meshes/center_hubcap.stl"/>
+			<mesh filename="package://p3dx_urdf_model/meshes/p3dx_meshes/center_hubcap.stl"/>
 		</geometry>
 		<material name="swivel">
 			<color rgba="0.5 0.5 0.5 1"/>
@@ -132,17 +184,9 @@
 		<material value="Gazebo/Grey"/>
 	</gazebo>
 
-	<joint name="swivel_hubcap_joint" type="continuous">
-		<origin xyz="-0.026 0 -0.016" rpy="0 0 0"/>
-		<axis xyz="0 1 0"/>
-		<anchor xyz="0 0 0"/>
-    <limit effort="100" velocity="100" k_velocity="0" />
-    <joint_properties damping="0.0" friction="0.0" />
-	  <parent link="swivel"/>
-		<child link="center_wheel"/>
-	</joint>
+	
 
-	<link name="center_wheel">
+	<link name="${robot_id}/center_wheel">
 		<inertial>
 			<mass value="0.1"/>	
 			<origin xyz="0 0 0"/>
@@ -152,7 +196,7 @@
 	<visual name="pioneer_geom">
 		<origin xyz="0 0 0" rpy="0 0 0"/>
 		<geometry name="pioneer_geom">
-			<mesh filename="package://p2os_urdf/meshes/p3dx_meshes/center_wheel.stl"/>
+			<mesh filename="package://p3dx_urdf_model/meshes/p3dx_meshes/center_wheel.stl"/>
 		</geometry>
 		<material name="WheelBlack">
 			<color rgba="0.117 0.117 0.117 1"/>
@@ -161,7 +205,7 @@
 	<collision>
 		<origin xyz="0 0 0" rpy="${-3.1415927/2.0} 0 0"/>
 		<geometry>
-			<!--<mesh filename="package://p2os_urdf/meshes/p3dx_meshes/center_wheel.stl"/>-->
+			<!--<mesh filename="package://p3dx_urdf_model/meshes/p3dx_meshes/center_wheel.stl"/>-->
 			<cylinder radius="0.0375" length="0.01"/>
 		</geometry>
 	</collision>
@@ -170,17 +214,39 @@
 		<material value="Gazebo/Yellow"/>
 	</gazebo>
 
-	<joint name="center_wheel_joint" type="fixed">
-		<origin xyz="-0.0035 0 -0.001" rpy="0 0 0"/>
-		<parent link="center_wheel"/>
-		<child link="center_hubcap"/>
+	<joint name="${robot_id}/base_swivel_joint" type="fixed">
+		<origin xyz="-0.185 0 0.055" rpy="0 0 0"/>
+		<anchor xyz="0 1 0"/>
+    	<limit effort="100" velocity="100" k_velocity="0" />
+    	<joint_properties damping="0.0" friction="0.0" />
+		<parent link="${robot_id}/base_link"/>
+		<child link="${robot_id}/swivel"/>
 	</joint>
 
-	<link name="left_hub">
+	<joint name="${robot_id}/swivel_hubcap_joint" type="fixed">
+		<origin xyz="-0.026 0 -0.016" rpy="0 0 0"/>
+		<axis xyz="0 1 0"/>
+		<anchor xyz="0 0 0"/>
+    	<limit effort="100" velocity="100" k_velocity="0" />
+    	<joint_properties damping="0.0" friction="0.0" />
+	  	<parent link="${robot_id}/swivel"/>
+		<child link="${robot_id}/center_wheel"/>
+	</joint>
+
+
+	<joint name="${robot_id}/center_wheel_joint" type="fixed">
+		<origin xyz="-0.0035 0 -0.001" rpy="0 0 0"/>
+		<parent link="${robot_id}/center_wheel"/>
+		<child link="${robot_id}/center_hubcap"/>
+	</joint>
+
+	<!-- LEFT WHEEL ***************************************************** -->
+
+	<link name="${robot_id}/left_hub">
 		<visual>
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry>
-				<mesh filename="package://p2os_urdf/meshes/p3dx_meshes/left_hubcap.stl"/>
+				<mesh filename="package://p3dx_urdf_model/meshes/p3dx_meshes/left_hubcap.stl"/>
 			</geometry>
 			<material name="HubcapYellow">
 				<color rgba="1.0 0.811 0.151 1.0"/>
@@ -189,46 +255,48 @@
 		<collision>
 			<origin xyz="0 0 0" rpy="${-3.1415927/2.0} 0 0"/>
 			<geometry>
-				<!--<mesh filename="package://p2os_urdf/meshes/p3dx_meshes/center_wheel.stl"/>-->
+				<!--<mesh filename="package://p3dx_urdf_model/meshes/p3dx_meshes/center_wheel.stl"/>-->
 				<cylinder radius="0.09" length="0.01"/>
 			</geometry>
 		</collision>
 	</link>
 
-	<joint name="left_hub_joint" type="fixed">
-		<origin xyz="0 0.15 0.08" rpy="0 0 0"/>
-		<parent link="base_link"/>
-		<child link="left_hub"/>
-		<axis xyz="0 1 0"/>
-	</joint>
+	
 
-	<link name="left_wheel_joint">
+	<link name="${robot_id}/base/joint0">
 		<visual>
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry>
-				<mesh filename="package://p2os_urdf/meshes/p3dx_meshes/left_wheel.stl"/>
+				<mesh filename="package://p3dx_urdf_model/meshes/p3dx_meshes/left_wheel.stl"/>
 			</geometry>
 			<material name="WheelBlack">
 				<color rgba="0.117 0.117 0.117 1"/>
 			</material>
 		</visual>
 	</link>
-
-	<joint name="left_wheel_joint" type="fixed">
-		<origin xyz="0 0 0" rpy="0 0 0"/>
-		<parent link="left_hub"/>
-		<child link="left_wheel_joint"/>
-	</joint>
-	
 	<gazebo reference="left_wheel_joint">
 		<material value="Gazebo/Black"/>
 	</gazebo>
 
-	<link name="right_hub">
+	<joint name="${robot_id}/base/joint0" type="fixed">
+		<origin xyz="0 0 0" rpy="0 0 0"/>
+		<parent link="${robot_id}/left_hub"/>
+		<child link="${robot_id}/base/joint0"/>
+	</joint>
+
+	<joint name="${robot_id}/left_hub_joint" type="fixed">
+		<origin xyz="0 0.15 0.08" rpy="0 0 0"/>
+		<parent link="${robot_id}/base_link"/>
+		<child link="${robot_id}/left_hub"/>
+		<axis xyz="0 1 0"/>
+	</joint>
+
+<!-- RIGHT WHEEL ***************************************************************** -->
+	<link name="${robot_id}/right_hub">
 		<visual>
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry>
-				<mesh filename="package://p2os_urdf/meshes/p3dx_meshes/right_hubcap.stl"/>
+				<mesh filename="package://p3dx_urdf_model/meshes/p3dx_meshes/right_hubcap.stl"/>
 			</geometry>
 			<material name="HubcapYellow">
 				<color rgba="1.0 0.811 0.151 1.0"/>
@@ -237,7 +305,7 @@
 		<collision>
 		<origin xyz="0 0 0" rpy="${-3.1415927/2.0} 0 0"/>
 		<geometry>
-			<!--<mesh filename="package://p2os_urdf/meshes/p3dx_meshes/center_wheel.stl"/>-->
+			<!--<mesh filename="package://p3dx_urdf_model/meshes/p3dx_meshes/center_wheel.stl"/>-->
 			<cylinder radius="0.09" length="0.01"/>
 		</geometry>
 	</collision>
@@ -246,106 +314,190 @@
 		<material value="Gazebo/Yellow"/>
 	</gazebo>
 
-	<joint name="right_hub_joint" type="fixed">
-		<origin xyz="0 -0.15 0.08" rpy="0 0 0"/>
-		<parent link="base_link"/>
-		<child link="right_hub"/>
-		<axis xyz="0 1 0"/>
-	</joint>
+	
 
-	<link name="right_wheel_joint">
+	<link name="${robot_id}/base/joint1">
 		<visual>
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry>
-				<mesh filename="package://p2os_urdf/meshes/p3dx_meshes/right_wheel.stl"/>
+				<mesh filename="package://p3dx_urdf_model/meshes/p3dx_meshes/right_wheel.stl"/>
 			</geometry>
 			<material name="WheelBlack">
 				<color rgba="0.117 0.117 0.117 1"/>
 			</material>
 		</visual>
 	</link>
-
-	<joint name="right_wheel_joint" type="fixed">
-		<origin xyz="0 0 0" rpy="0 0 0"/>
-		<parent link="right_hub"/>
-		<child link="right_wheel_joint"/>
-	</joint>
 	<gazebo reference="right_wheel_joint">
 		<material value="Gazebo/Black"/>
 	</gazebo>
 
-	<!-- Front + Back Sonar -->
-	<link name="front_sonar">
+	<joint name="${robot_id}/base/joint1" type="fixed">
+		<origin xyz="0 0 0" rpy="0 0 0"/>
+		<parent link="${robot_id}/right_hub"/>
+		<child link="${robot_id}/base/joint1"/>
+	</joint>
+
+	<joint name="${robot_id}/right_hub_joint" type="fixed">
+		<origin xyz="0 -0.15 0.08" rpy="0 0 0"/>
+		<parent link="${robot_id}/base_link"/>
+		<child link="${robot_id}/right_hub"/>
+		<axis xyz="0 1 0"/>
+	</joint>
+
+<!-- ******************************SONARS**************************************************** -->
+	<!-- front side sonars -->
+	<property name="sonar_height" value="+0.21"/>
+	<sonar id="0" x="0.1064" y="-0.1381" z="${sonar_height}" roll="0" pitch="0" yaw="-1.5708" />
+	<sonar id="1" x="0.1555" y="-0.1202" z="${sonar_height}" roll="0" pitch="0" yaw="${-1.5708+0.6981}" />
+	<sonar id="2" x="+0.1906" y="-0.0785" z="${sonar_height}" roll="0" pitch="0" yaw="${-1.5708+1.0472}" />
+	<sonar id="3" x="+0.2092" y="-0.0273" z="${sonar_height}" roll="0" pitch="0" yaw="${-1.5708+1.3963}" />
+	<sonar id="4" x="+0.2092" y="+0.0273" z="${sonar_height}" roll="0" pitch="0" yaw="${1.5708-1.3963}" />
+	<sonar id="5" x="+0.1906" y="+0.0831" z="${sonar_height}" roll="0" pitch="0" yaw="${1.5708-1.0472}" />
+	<sonar id="6" x="+0.1554" y="+0.1251" z="${sonar_height}" roll="0" pitch="0" yaw="${1.5708-0.6981}" />
+	<sonar id="7" x="+0.1064" y="+0.1382" z="${sonar_height}" roll="0" pitch="0" yaw="${1.5708}" />
+	<!-- back side sonars -->
+	<sonar id="8" x="-0.1103" y="+0.1382" z="${sonar_height}" roll="0" pitch="0" yaw="${1.5708}" />
+	<sonar id="9" x="-0.1595" y="+0.1203" z="${sonar_height}" roll="0" pitch="0" yaw="${1.5708+0.6981}" />
+	<sonar id="10" x="-0.1946" y="+0.0785" z="${sonar_height}" roll="0" pitch="0" yaw="${1.5708+1.0472}" />
+	<sonar id="11" x="-0.2132" y="+0.0273" z="${sonar_height}" roll="0" pitch="0" yaw="${1.5708+1.3955}" />
+	<sonar id="12" x="-0.2132" y="-0.0273" z="${sonar_height}" roll="0" pitch="0" yaw="${1.5708+1.3955}" />
+	<sonar id="13" x="-0.1946" y="-0.0785" z="${sonar_height}" roll="0" pitch="0" yaw="${-1.5708-1.0472}" />
+	<sonar id="14" x="-0.1595" y="-0.1202" z="${sonar_height}" roll="0" pitch="0" yaw="${-1.5708-0.6985}" />
+	<sonar id="15" x="-0.1103" y="-0.1382" z="${sonar_height}" roll="0" pitch="0" yaw="${-1.5708}" />
+
+	<!-- *************************BUMPERS****************************************************** -->
+	<!-- front side bumpers -->
+	<property name="bumper_height" value="+0.0681"/>
+	<bumper id="0" x="+0.1767" y="-0.1700" z="${bumper_height}" roll="0" pitch="0" yaw="${-1.5708+0.6210}" />
+	<bumper id="1" x="+0.2377" y="-0.0909" z="${bumper_height}" roll="0" pitch="0" yaw="${-1.5708+1.2318}" />
+	<bumper id="2" x="+0.2549" y="0" z="${bumper_height}" roll="0" pitch="0" yaw="0" />
+	<bumper id="3" x="+0.2377" y="+0.0909" z="${bumper_height}" roll="0" pitch="0" yaw="${1.5708-1.2173}" /> 
+	<bumper id="4" x="+0.1767" y="+0.1700" z="${bumper_height}" roll="0" pitch="0" yaw="${1.5708-0.6007}" />
+
+	<!-- back side bumpers -->
+	<property name="bumper_height" value="+0.0681"/>
+	<bumper id="5" x="-0.1476" y="+0.1712" z="${bumper_height}" roll="0" pitch="0" yaw="${1.5708+0.4465}" />
+	<bumper id="6" x="-0.2259" y="+0.0978" z="${bumper_height}" roll="0" pitch="0" yaw="${1.5708+1.0573}" />
+	<bumper id="7" x="-0.2553" y="0" z="${bumper_height}" roll="0" pitch="0" yaw="${-1.5708 * 2}" />
+	<bumper id="8" x="-0.2259" y="-0.0978" z="${bumper_height}" roll="0" pitch="0" yaw="${-1.5708-1.0371}" /> 
+	<bumper id="9" x="-0.1476" y="-0.1712" z="${bumper_height}" roll="0" pitch="0" yaw="${-1.5708-0.4262}" />
+
+<!-- ************************************************ LASER SCANER ********************************-->
+	<link name="${robot_id}/laserSensors/sensor0">
 		<inertial>
 			<mass value="0.0001"/>	
 			<origin xyz="0 0 0"/>
 			<inertia ixx="1" ixy="0" ixz="0"
 				 iyy="1" iyz="0" izz="1"/>
 		</inertial>
-		<visual name="pioneer_geom">
-			<origin xyz="0 0 0" rpy="0 0 0"/>
-			<geometry name="pioneer_geom">
-				<mesh filename="package://p2os_urdf/meshes/p3dx_meshes/front_sonar.stl"/>
-			</geometry>
-			<material name="SonarYellow">
-				<color rgba="0.715 0.583 0.210 1.0"/>
-			</material>
-		</visual>
-		<collision>
-			<origin xyz="0 0 0" rpy="0 0 0"/>
-			<geometry>
-				<box size="0 0 0"/>
-			</geometry>
-		</collision>
+		<visual>
+		 	<origin xyz="0 0 0" rpy="0 0 0" />
+        	<geometry>
+          		<box size="0.1 0.1 0.1" />
+        	</geometry>
+        	<material name="Cyan">
+          		<color rgba="0 1.0 1.0 1.0"/>
+        	</material>
+    	</visual>
 	</link>
+	<gazebo reference="${robot_id}/laserSensors/sensor0">
+		<material value="Gazebo/Blue"/>
+	</gazebo>	
 
-	<gazebo reference="front_sonar">
-		<material value="Gazebo/Yellow"/>
-	</gazebo>
+	<joint name="${robot_id}/laserSensors/0_joint" type="fixed">
+		<origin xyz="0.1498 0 0.05" rpy="0 0 0"/>
+		<parent link="${robot_id}/top_plate"/>
+		<child link="${robot_id}/laserSensors/sensor0"/>
+	</joint>		
 
-	<joint name="base_front_joint" type="fixed">
-		<origin xyz="-0.198 0 0.208" rpy="0 0 0"/>
-		<parent link="base_link"/>
-		<child link="front_sonar"/>
-	</joint>
-
-	<link name="back_sonar">
+	<!-- ************************************************ CAMERA ********************************-->
+	
+	<link name="${robot_id}/cameraSensors/sensor0">
 		<inertial>
 			<mass value="0.0001"/>	
 			<origin xyz="0 0 0"/>
 			<inertia ixx="1" ixy="0" ixz="0"
 				 iyy="1" iyz="0" izz="1"/>
 		</inertial>
-		<visual name="back_sonar_vis">
-			<origin xyz="0 0 0" rpy="0 0 0"/>
-			<geometry name="pioneer_geom">
-				<mesh filename="package://p2os_urdf/meshes/p3dx_meshes/back_sonar.stl"/>
-			</geometry>
-			<material name="SonarYellow">
-				<color rgba="0.715 0.583 0.210 1.0"/>
-			</material>
-		</visual>
-		<collision>
-			<origin xyz="0 0 0" rpy="0 0 0"/>
-			<geometry>
-				<box size=" 0.5 0.25 0.05"/>
-			</geometry>
-		</collision>
+		<visual>
+		 	<origin xyz="0 0 0" rpy="0 0 0" />
+        	<geometry>
+          		<box size="0.1 0.1 0.1" />
+        	</geometry>
+        	<material name="Cyan">
+          		<color rgba="0 1.0 1.0 1.2"/>
+        	</material>
+    	</visual>
 	</link>
+	<gazebo reference="${robot_id}/cameraSensors/sensor0">
+		<material value="Gazebo/Blue"/>
+	</gazebo>	
 
-	<gazebo reference="back_sonar">
-		<material value="Gazebo/Yellow"/>
-	</gazebo>
+	<joint name="${robot_id}/cameraSensors/0_joint" type="fixed">
+		<origin xyz="0.1498 0 0.001" rpy="1.5708 0 1.5708"/>
+		<parent link="${robot_id}/top_plate"/>
+		<child link="${robot_id}/cameraSensors/sensor0"/>
+	</joint>		
 
-	<joint name="base_back_joint" type="fixed">
-		<origin xyz="0.109 0 0.209" rpy="0 0 0"/>
-		<!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
-		<parent link="base_link"/>
-		<child link="back_sonar"/>
-	</joint>
+	<!-- ************************************************ GYRO ********************************-->
+	
+	<link name="${robot_id}/gyroSensors/sensor0">
+		<inertial>
+			<mass value="0.0001"/>	
+			<origin xyz="0 0 0"/>
+			<inertia ixx="1" ixy="0" ixz="0"
+				 iyy="1" iyz="0" izz="1"/>
+		</inertial>
+		<visual>
+		 	<origin xyz="0 0 0" rpy="0 0 0" />
+        	<geometry>
+          		<box size="0.1 0.1 0.1" />
+        	</geometry>
+        	<material name="Cyan">
+          		<color rgba="0 1.0 1.0 1.2"/>
+        	</material>
+    	</visual>
+	</link>
+	<gazebo reference="${robot_id}/gyroSensors/sensor0">
+		<material value="Gazebo/Blue"/>
+	</gazebo>	
+
+	<joint name="${robot_id}/gyroSensors/0_joint" type="fixed">
+		<origin xyz="0 0 0.0" rpy="0 0 0"/>
+		<parent link="${robot_id}/top_plate"/>
+		<child link="${robot_id}/gyroSensors/sensor0"/>
+	</joint>		
+
+<!-- ************************************************ ACCELEROMETER ********************************-->
+	
+	<link name="${robot_id}/accelerometerSensors/sensor0">
+		<inertial>
+			<mass value="0.0001"/>	
+			<origin xyz="0 0 0"/>
+			<inertia ixx="1" ixy="0" ixz="0"
+				 iyy="1" iyz="0" izz="1"/>
+		</inertial>
+		<visual>
+		 	<origin xyz="0 0 0" rpy="0 0 0" />
+        	<geometry>
+          		<box size="0.1 0.1 0.1" />
+        	</geometry>
+        	<material name="Cyan">
+          		<color rgba="0 1.0 1.0 1.2"/>
+        	</material>
+    	</visual>
+	</link>
+	<gazebo reference="${robot_id}/accelerometerSensors/sensor0">
+		<material value="Gazebo/Blue"/>
+	</gazebo>	
+
+	<joint name="${robot_id}/accelerometerSensors/0_joint" type="fixed">
+		<origin xyz="0 0 0.0" rpy="0 0 0"/>
+		<parent link="${robot_id}/top_plate"/>
+		<child link="${robot_id}/accelerometerSensors/sensor0"/>
+	</joint>		
 
 	<xacro:macro name="p3dx_gazebo_ext">
-
 	<gazebo>
 	  <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
 	    <updateRate>100.0</updateRate>
