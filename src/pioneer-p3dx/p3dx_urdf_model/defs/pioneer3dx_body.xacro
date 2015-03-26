@@ -21,9 +21,6 @@ robot_number is accessed through variable ${robot_id}
 	   xmlns:xacro="http://ros.org/wiki/xacro"
 	   >
 
-	<!-- <xacro:include filename="$(find p3dx_urdf_model)/defs/pioneer3dx_wheel.xacro"/> -->
-	<!--  SET ROBOT NAME -->
-	<property name="robot_id" value="XX"/>
 	<!-- MACROS -->
 	<xacro:macro name="sonar" params= "id x y z roll pitch yaw" >
 		<link name="${robot_id}/ultrasonicSensors/sensor${id}">

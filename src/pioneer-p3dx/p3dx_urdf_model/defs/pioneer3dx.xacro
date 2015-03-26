@@ -6,7 +6,10 @@
 	   xmlns:xacro="http://ros.org/wiki/xacro"
 	   name="pioneer3dx">
 
-	<xacro:include filename="$(find p3dx_urdf_model)/defs/pioneer3dx_body.xacro" />
+	<!--  SET ROBOT NAME -->
+    <property name="robot_id" value="0"/>
+
+    <xacro:include filename="$(find p3dx_urdf_model)/defs/pioneer3dx_body.xacro" />
 
 	<!-- <xacro:right_wheel_joint suffix="" reflect="1"/>
 	<xacro:left_wheel_joint suffix="" reflect="-1"/>
