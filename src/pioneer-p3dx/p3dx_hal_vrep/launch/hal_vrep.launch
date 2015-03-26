@@ -3,10 +3,12 @@
   <group ns="hal">
     <!-- vrep robot's index -->
     <param name="vrep_index" type="int" value="0" />
+    <!-- robot's id in ROS ecosystem -->
+    <param name="robot_id" type="int" value="0" />
 
     <!-- hal members -->
     <node pkg="p3dx_hal_vrep" type="laser" name="laser" respawn="true" />
-    <node pkg="p3dx_hal_vrep" type="accelerometer" name="accelerometer" respawn="true" />
-    <node pkg="p3dx_hal_vrep" type="gyroscope" name="gyroscope" respawn="true" />
+    <node pkg="p3dx_hal_vrep" type="accelerometer" name="accelerometerSensors" respawn="true" />
+    <node pkg="p3dx_hal_vrep" type="gyroscope" name="gyroSensors" respawn="true" />
   </group>
 </launch>

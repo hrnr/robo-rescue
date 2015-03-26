@@ -9,6 +9,7 @@
 
 // publisher of Accelerometer data
 ros::Publisher publisher;
+int robot_id = 0;  // robot's index in ROS ecosystem (if multiple instances)
 
 void callback_val(const std_msgs::String::ConstPtr & msg) {
     std::vector<float> axis_data;
@@ -34,24 +35,28 @@ void callback_val(const std_msgs::String::ConstPtr & msg) {
     // creating new message
     p3dx_hal_vrep::StampedFloat32Array msg_out;
     std_msgs::Header header; // creating header
+    header.stamp = ros::Time::now(); // current time of data collection
+    header.frame_id=std::to_string(robot_id) + "/gyroSensors/sensor0";
     //  fill msg
-    msg_out.header=header;
-    msg_out.data=axis_data;
-    publisher.publish(msg_out); // publish vector of floats. One float for each axis X,Y,Z
+    msg_out.header = move(header);
+    msg_out.data = move(axis_data);
+    // publish vector of floats. One float for each axis X,Y,Z
+    publisher.publish( move(msg_out)); 
 }
 
 int main(int argc, char ** argv) {
     // init node name as accelerometer
-    ros::init(argc, argv, "gyroscope");
+    ros::init(argc, argv, "gyroSensors");
     // set relative node namespace
     ros::NodeHandle n("~");
-    int robot_no = 0; // robot's index in vrep (if multiple instances)
-    n.getParam("vrep_index", robot_no);
+    int vrep_no = 0; // robot's index in vrep (if multiple instances)
+    n.getParam("vrep_index", vrep_no);
+    n.getParam("robot_id", robot_id);
     // read msg from vrep topic
-    ros::Subscriber sub_val = n.subscribe("/vrep/i" + std::to_string(robot_no) +
+    ros::Subscriber sub_val = n.subscribe("/vrep/i" + std::to_string(vrep_no) +
         "_Pioneer_p3dx_GyroSensor", 1000, callback_val);
-    // creates publisher
-    publisher = n.advertise<p3dx_hal_vrep::StampedFloat32Array>("sensor" + std::to_string(robot_no)+"/axis_data", 1000);
+    // creates publisher in format ./sensor0/axis_data
+    publisher = n.advertise<p3dx_hal_vrep::StampedFloat32Array>("sensor0/axis_data", 1000);
     ROS_INFO("HAL(VREP): Gyroscope node initialized");
     
     // run event loop
