@@ -13,8 +13,8 @@
 		robot_number/part_name
 		example:
 			0/top_plate
-robot_number is accessed through variable ${robot_id}-->
-
+robot_number is accessed through variable ${robot_id}
+-->
 <robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
 	   xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
 	   xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
@@ -23,7 +23,7 @@ robot_number is accessed through variable ${robot_id}-->
 
 	<!-- MACROS -->
 	<xacro:macro name="sonar" params= "id x y z roll pitch yaw" >
-		<link name="${robot_id}ultrasonicSensors/sensor${id}">
+		<link name="${robot_id}/ultrasonicSensors/sensor${id}">
 			<inertial>
 				<mass value="0.0001"/>	
 				<origin xyz="0 0 0"/>
@@ -31,19 +31,19 @@ robot_number is accessed through variable ${robot_id}-->
 					 iyy="1" iyz="0" izz="1"/>
 			</inertial>
 		</link>
-		<gazebo reference="${robot_id}ultrasonicSensors/sensor${id}">
+		<gazebo reference="${robot_id}/ultrasonicSensors/sensor${id}">
 			<material value="Gazebo/Yellow"/>
 		</gazebo>	
 
-		<joint name="${robot_id}ultrasonicSensors/${id}_joint" type="fixed">
+		<joint name="${robot_id}/ultrasonicSensors/${id}_joint" type="fixed">
 			<origin xyz="${x} ${y} ${z}" rpy="${roll} ${pitch} ${yaw}"/>
-			<parent link="${robot_id}base_link"/>
-			<child link="${robot_id}ultrasonicSensors/sensor${id}"/>
+			<parent link="${robot_id}/base_link"/>
+			<child link="${robot_id}/ultrasonicSensors/sensor${id}"/>
 		</joint>
 	</xacro:macro>
 <!--  bumper macro -->
 	<xacro:macro name="bumper" params= "id x y z roll pitch yaw" >
-		<link name="${robot_id}bumperSensors/sensor${id}">
+		<link name="${robot_id}/bumperSensors/sensor${id}">
 			<inertial>
 				<mass value="0.0001"/>	
 				<origin xyz="0 0 0"/>
@@ -51,14 +51,14 @@ robot_number is accessed through variable ${robot_id}-->
 					 iyy="1" iyz="0" izz="1"/>
 			</inertial>
 		</link>
-		<gazebo reference="${robot_id}bumperSensors/sensor${id}">
+		<gazebo reference="${robot_id}/bumperSensors/sensor${id}">
 			<material value="Gazebo/Yellow"/>
 		</gazebo>	
 
-		<joint name="${robot_id}bumperSensors/${id}_joint" type="fixed">
+		<joint name="${robot_id}/bumperSensors/${id}_joint" type="fixed">
 			<origin xyz="${x} ${y} ${z}" rpy="${roll} ${pitch} ${yaw}"/>
-			<parent link="${robot_id}base_link"/>
-			<child link="${robot_id}bumperSensors/sensor${id}"/>
+			<parent link="${robot_id}/base_link"/>
+			<child link="${robot_id}/bumperSensors/sensor${id}"/>
 		</joint>
 	</xacro:macro>
 
@@ -66,7 +66,7 @@ robot_number is accessed through variable ${robot_id}-->
 
 <!-- *********************************** CHASIS ********************************************** -->
 	<!-- Chassis description -->
-	<link name="${robot_id}base_link">
+	<link name="${robot_id}/base_link">
 		<!-- CHECK THESE VALUES. THEY MAY BE COMPLETELY WRONG. -->
 		<inertial>
 			<mass value="31.1"/>
@@ -92,11 +92,11 @@ robot_number is accessed through variable ${robot_id}-->
 				</geometry>
 		</collision>
 	</link>
-	<gazebo reference="${robot_id}base_link">
+	<gazebo reference="${robot_id}/base_link">
 		<material value="Gazebo/Red"/>
 	</gazebo>
 <!-- Top part of the robot -->
-	<link name="${robot_id}top_plate">
+	<link name="${robot_id}/top_plate">
 		<inertial>
 			<mass value="0.01"/>	
 			<origin xyz="0 0 0"/>
@@ -113,21 +113,21 @@ robot_number is accessed through variable ${robot_id}-->
 			</material>
 		</visual>
 	</link>
-	<gazebo reference="${robot_id}top_plate">
+	<gazebo reference="${robot_id}/top_plate">
 		<material value="Gazebo/Black"/>
 	</gazebo>
 
 	
-	<joint name="${robot_id}base_top_joint" type="fixed">
+	<joint name="${robot_id}/base_top_joint" type="fixed">
 		<origin xyz="-0.0 0 0.24" rpy="0 0 0"/>
-		<parent link="${robot_id}base_link"/>
-		<child link="${robot_id}top_plate"/>
+		<parent link="${robot_id}/base_link"/>
+		<child link="${robot_id}/top_plate"/>
 	</joint>
 
 
 
 <!-- ********************************************* CENTER WHEEL****************************************** -->
-<link name="${robot_id}swivel">
+<link name="${robot_id}/swivel">
 		<inertial>
 			<mass value="0.1"/>	
 			<origin xyz="0 0 0"/>
@@ -154,7 +154,7 @@ robot_number is accessed through variable ${robot_id}-->
 		<material value="Gazebo/Grey"/>
 	</gazebo>
 <!-- Center Wheel + Hubcap -->
-	<link name="${robot_id}center_hubcap">
+	<link name="${robot_id}/center_hubcap">
 		<inertial>
 			<mass value="0.01"/>	
 			<origin xyz="0 0 0"/>
@@ -183,7 +183,7 @@ robot_number is accessed through variable ${robot_id}-->
 
 	
 
-	<link name="${robot_id}center_wheel">
+	<link name="${robot_id}/center_wheel">
 		<inertial>
 			<mass value="0.1"/>	
 			<origin xyz="0 0 0"/>
@@ -211,35 +211,35 @@ robot_number is accessed through variable ${robot_id}-->
 		<material value="Gazebo/Yellow"/>
 	</gazebo>
 
-	<joint name="${robot_id}base_swivel_joint" type="fixed">
+	<joint name="${robot_id}/base_swivel_joint" type="fixed">
 		<origin xyz="-0.185 0 0.055" rpy="0 0 0"/>
 		<anchor xyz="0 1 0"/>
     	<limit effort="100" velocity="100" k_velocity="0" />
     	<joint_properties damping="0.0" friction="0.0" />
-		<parent link="${robot_id}base_link"/>
-		<child link="${robot_id}swivel"/>
+		<parent link="${robot_id}/base_link"/>
+		<child link="${robot_id}/swivel"/>
 	</joint>
 
-	<joint name="${robot_id}swivel_hubcap_joint" type="fixed">
+	<joint name="${robot_id}/swivel_hubcap_joint" type="fixed">
 		<origin xyz="-0.026 0 -0.016" rpy="0 0 0"/>
 		<axis xyz="0 1 0"/>
 		<anchor xyz="0 0 0"/>
     	<limit effort="100" velocity="100" k_velocity="0" />
     	<joint_properties damping="0.0" friction="0.0" />
-	  	<parent link="${robot_id}swivel"/>
-		<child link="${robot_id}center_wheel"/>
+	  	<parent link="${robot_id}/swivel"/>
+		<child link="${robot_id}/center_wheel"/>
 	</joint>
 
 
-	<joint name="${robot_id}center_wheel_joint" type="fixed">
+	<joint name="${robot_id}/center_wheel_joint" type="fixed">
 		<origin xyz="-0.0035 0 -0.001" rpy="0 0 0"/>
-		<parent link="${robot_id}center_wheel"/>
-		<child link="${robot_id}center_hubcap"/>
+		<parent link="${robot_id}/center_wheel"/>
+		<child link="${robot_id}/center_hubcap"/>
 	</joint>
 
 	<!-- LEFT WHEEL ***************************************************** -->
 
-	<link name="${robot_id}left_hub">
+	<link name="${robot_id}/left_hub">
 		<visual>
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry>
@@ -260,7 +260,7 @@ robot_number is accessed through variable ${robot_id}-->
 
 	
 
-	<link name="${robot_id}base/joint0">
+	<link name="${robot_id}/base/joint0">
 		<visual>
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry>
@@ -275,21 +275,21 @@ robot_number is accessed through variable ${robot_id}-->
 		<material value="Gazebo/Black"/>
 	</gazebo>
 
-	<joint name="${robot_id}base/joint0" type="fixed">
+	<joint name="${robot_id}/base/joint0" type="fixed">
 		<origin xyz="0 0 0" rpy="0 0 0"/>
-		<parent link="${robot_id}left_hub"/>
-		<child link="${robot_id}base/joint0"/>
+		<parent link="${robot_id}/left_hub"/>
+		<child link="${robot_id}/base/joint0"/>
 	</joint>
 
-	<joint name="${robot_id}left_hub_joint" type="fixed">
+	<joint name="${robot_id}/left_hub_joint" type="fixed">
 		<origin xyz="0 0.15 0.08" rpy="0 0 0"/>
-		<parent link="${robot_id}base_link"/>
-		<child link="${robot_id}left_hub"/>
+		<parent link="${robot_id}/base_link"/>
+		<child link="${robot_id}/left_hub"/>
 		<axis xyz="0 1 0"/>
 	</joint>
 
 <!-- RIGHT WHEEL ***************************************************************** -->
-	<link name="${robot_id}right_hub">
+	<link name="${robot_id}/right_hub">
 		<visual>
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry>
@@ -313,7 +313,7 @@ robot_number is accessed through variable ${robot_id}-->
 
 	
 
-	<link name="${robot_id}base/joint1">
+	<link name="${robot_id}/base/joint1">
 		<visual>
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry>
@@ -328,16 +328,16 @@ robot_number is accessed through variable ${robot_id}-->
 		<material value="Gazebo/Black"/>
 	</gazebo>
 
-	<joint name="${robot_id}base/joint1" type="fixed">
+	<joint name="${robot_id}/base/joint1" type="fixed">
 		<origin xyz="0 0 0" rpy="0 0 0"/>
-		<parent link="${robot_id}right_hub"/>
-		<child link="${robot_id}base/joint1"/>
+		<parent link="${robot_id}/right_hub"/>
+		<child link="${robot_id}/base/joint1"/>
 	</joint>
 
-	<joint name="${robot_id}right_hub_joint" type="fixed">
+	<joint name="${robot_id}/right_hub_joint" type="fixed">
 		<origin xyz="0 -0.15 0.08" rpy="0 0 0"/>
-		<parent link="${robot_id}base_link"/>
-		<child link="${robot_id}right_hub"/>
+		<parent link="${robot_id}/base_link"/>
+		<child link="${robot_id}/right_hub"/>
 		<axis xyz="0 1 0"/>
 	</joint>
 
@@ -380,7 +380,7 @@ robot_number is accessed through variable ${robot_id}-->
 	<bumper id="9" x="-0.1476" y="-0.1712" z="${bumper_height}" roll="0" pitch="0" yaw="${-1.5708-0.4262}" />
 
 <!-- ************************************************ LASER SCANER ********************************-->
-	<link name="${robot_id}laserSensors/sensor0">
+	<link name="${robot_id}/laserSensors/sensor0">
 		<inertial>
 			<mass value="0.0001"/>	
 			<origin xyz="0 0 0"/>
@@ -397,19 +397,19 @@ robot_number is accessed through variable ${robot_id}-->
         	</material>
     	</visual>
 	</link>
-	<gazebo reference="${robot_id}laserSensors/sensor0">
+	<gazebo reference="${robot_id}/laserSensors/sensor0">
 		<material value="Gazebo/Blue"/>
 	</gazebo>	
 
-	<joint name="${robot_id}laserSensors/0_joint" type="fixed">
+	<joint name="${robot_id}/laserSensors/0_joint" type="fixed">
 		<origin xyz="0.1498 0 0.05" rpy="0 0 0"/>
-		<parent link="${robot_id}top_plate"/>
-		<child link="${robot_id}laserSensors/sensor0"/>
+		<parent link="${robot_id}/top_plate"/>
+		<child link="${robot_id}/laserSensors/sensor0"/>
 	</joint>		
 
 	<!-- ************************************************ CAMERA ********************************-->
 	
-	<link name="${robot_id}cameraSensors/sensor0">
+	<link name="${robot_id}/cameraSensors/sensor0">
 		<inertial>
 			<mass value="0.0001"/>	
 			<origin xyz="0 0 0"/>
@@ -426,19 +426,19 @@ robot_number is accessed through variable ${robot_id}-->
         	</material>
     	</visual>
 	</link>
-	<gazebo reference="${robot_id}cameraSensors/sensor0">
+	<gazebo reference="${robot_id}/cameraSensors/sensor0">
 		<material value="Gazebo/Blue"/>
 	</gazebo>	
 
-	<joint name="${robot_id}cameraSensors/0_joint" type="fixed">
+	<joint name="${robot_id}/cameraSensors/0_joint" type="fixed">
 		<origin xyz="0.1498 0 0.001" rpy="1.5708 0 1.5708"/>
-		<parent link="${robot_id}top_plate"/>
-		<child link="${robot_id}cameraSensors/sensor0"/>
+		<parent link="${robot_id}/top_plate"/>
+		<child link="${robot_id}/cameraSensors/sensor0"/>
 	</joint>		
 
 	<!-- ************************************************ GYRO ********************************-->
 	
-	<link name="${robot_id}gyroSensors/sensor0">
+	<link name="${robot_id}/gyroSensors/sensor0">
 		<inertial>
 			<mass value="0.0001"/>	
 			<origin xyz="0 0 0"/>
@@ -455,19 +455,19 @@ robot_number is accessed through variable ${robot_id}-->
         	</material>
     	</visual>
 	</link>
-	<gazebo reference="${robot_id}gyroSensors/sensor0">
+	<gazebo reference="${robot_id}/gyroSensors/sensor0">
 		<material value="Gazebo/Blue"/>
 	</gazebo>	
 
-	<joint name="${robot_id}gyroSensors/0_joint" type="fixed">
+	<joint name="${robot_id}/gyroSensors/0_joint" type="fixed">
 		<origin xyz="0 0 0.0" rpy="0 0 0"/>
-		<parent link="${robot_id}top_plate"/>
-		<child link="${robot_id}gyroSensors/sensor0"/>
+		<parent link="${robot_id}/top_plate"/>
+		<child link="${robot_id}/gyroSensors/sensor0"/>
 	</joint>		
 
 <!-- ************************************************ ACCELEROMETER ********************************-->
 	
-	<link name="${robot_id}accelerometerSensors/sensor0">
+	<link name="${robot_id}/accelerometerSensors/sensor0">
 		<inertial>
 			<mass value="0.0001"/>	
 			<origin xyz="0 0 0"/>
@@ -484,14 +484,14 @@ robot_number is accessed through variable ${robot_id}-->
         	</material>
     	</visual>
 	</link>
-	<gazebo reference="${robot_id}accelerometerSensors/sensor0">
+	<gazebo reference="${robot_id}/accelerometerSensors/sensor0">
 		<material value="Gazebo/Blue"/>
 	</gazebo>	
 
-	<joint name="${robot_id}accelerometerSensors/0_joint" type="fixed">
+	<joint name="${robot_id}/accelerometerSensors/0_joint" type="fixed">
 		<origin xyz="0 0 0.0" rpy="0 0 0"/>
-		<parent link="${robot_id}top_plate"/>
-		<child link="${robot_id}accelerometerSensors/sensor0"/>
+		<parent link="${robot_id}/top_plate"/>
+		<child link="${robot_id}/accelerometerSensors/sensor0"/>
 	</joint>		
 
 	<xacro:macro name="p3dx_gazebo_ext">
