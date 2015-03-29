@@ -1,5 +1,5 @@
-#ifndef LEFT_MOTOR_VREP_PUBLISHER
-#define LEFT_MOTOR_VREP_PUBLISHER
+#ifndef RIGHT_MOTOR_VREP_PUBLISHER
+#define RIGHT_MOTOR_VREP_PUBLISHER
 #include "ros/ros.h"
 #include "sensor_msgs/JointState.h"
 #include "std_msgs/Float64.h"
@@ -17,7 +17,7 @@ void stateCallback(const sensor_msgs::JointState::ConstPtr &msg) {
   sensor_msgs::JointState msg_out;
   std_msgs::Header header;         // creating header
   header.stamp = ros::Time::now(); // current time of data collection
-  header.frame_id = tf_prefix + "/base/joint0";
+  header.frame_id = tf_prefix + "/base/joint1";
   // filling new output msg with data from vrep
   msg_out.header = move(header);
   msg_out.effort = msg->effort;
@@ -28,7 +28,7 @@ void stateCallback(const sensor_msgs::JointState::ConstPtr &msg) {
 }
 
 void velCallback(const std_msgs::Float64::ConstPtr &msg) {
-  // publish float 64 of value velocity of left wheel
+  // publish float 64 of value velocity of right wheel
   pub_toVrep.publish(msg);
 }
 
@@ -36,7 +36,7 @@ void velCallback(const std_msgs::Float64::ConstPtr &msg) {
 
 int main(int argc, char **argv) {
   // init node name as accelerometer
-  ros::init(argc, argv, "leftMotor");
+  ros::init(argc, argv, "rightMotor");
   // set relative node namespace
   ros::NodeHandle n("~");
   int vrep_no = 0; // robot's index in vrep (if multiple instances)
@@ -45,17 +45,17 @@ int main(int argc, char **argv) {
   
   // read msg from vrep topic joint state and publishing it to ROS
   n.subscribe("/vrep/i" + std::to_string(vrep_no) +
-                                            "_Pioneer_p3dx_leftMotor/getState",
+                                            "_Pioneer_p3dx_rightMotor/getState",
                                         1000, stateCallback);
   pub_toRos = n.advertise<sensor_msgs::JointState>("getState", 1000);
-  ROS_INFO("HAL(VREP): Left motor state msg publisher node initialized");
+  ROS_INFO("HAL(VREP): Right motor state msg publisher node initialized");
 
   // publishing velocity from ROS to vrep
   ros::Publisher pub_toVrep = n.advertise<std_msgs::Float64>(
-      "/vrep/i" + std::to_string(vrep_no) + "_Pioneer_p3dx_leftMotor/setVel",
+      "/vrep/i" + std::to_string(vrep_no) + "_Pioneer_p3dx_rightMotor/setVel",
       1000);
   n.subscribe("setVel", 1000, velCallback);
-  ROS_INFO("HAL(VREP): Left motor publisher to vrep: velocity msg initialized");
+  ROS_INFO("HAL(VREP): Right motor publisher to vrep: velocity msg initialized");
 
   // run event loop
   ros::spin();

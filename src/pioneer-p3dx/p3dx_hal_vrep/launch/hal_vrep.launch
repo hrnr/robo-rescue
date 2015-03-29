@@ -13,9 +13,7 @@
     <node pkg="p3dx_hal_vrep" type="gyroscope" name="gyro" respawn="true" />
     <node pkg="p3dx_hal_vrep" type="ultrasonic" name="ultrasonic" respawn="true" />
     <node pkg="p3dx_hal_vrep" type="bumper" name="bumper" respawn="true" />
-    <node pkg="p3dx_hal_vrep" type="rightMotorGet" name="rightMotorGet" respawn="true" />
-    <node pkg="p3dx_hal_vrep" type="rightMotorSet" name="rightMotorSet" respawn="true" />
-    <node pkg="p3dx_hal_vrep" type="leftMotorGet" name="leftMotorGet" respawn="true" />
-    <node pkg="p3dx_hal_vrep" type="leftMotorSet" name="leftMotorSet" respawn="true" />
+    <node pkg="p3dx_hal_vrep" type="rightMotor" name="rightMotor" respawn="true" />
+    <node pkg="p3dx_hal_vrep" type="leftMotor" name="leftMotor" respawn="true" />
   </group>
 </launch>
