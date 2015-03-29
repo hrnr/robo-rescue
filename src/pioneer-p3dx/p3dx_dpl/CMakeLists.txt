@@ -7,10 +7,10 @@ project(p3dx_dpl)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
-  sensor_msgs
+  geometry_msgs
   roslaunch
-  message_generation
-)
+  tf
+ )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -84,7 +84,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES p3dx_dpl
-#  CATKIN_DEPENDS message_runtime
+#  CATKIN_DEPENDS tf
 #  DEPENDS system_lib
 )
 
@@ -113,6 +113,9 @@ include_directories(
 
 ## Declare a cpp executable
 # add_executable(p3dx_dpl_node src/p3dx_dpl_node.cpp)
+
+add_executable(motor_controler src/motor_controler.cpp)
+target_link_libraries(motor_controler ${catkin_LIBRARIES})
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
