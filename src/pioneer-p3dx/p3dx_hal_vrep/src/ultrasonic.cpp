@@ -2,8 +2,6 @@
 #include "sensor_msgs/Range.h"
 #include "std_msgs/Float32.h"
 #include <string>
-#include <sstream>
-#include <cmath>
 #include <utility>
 
 // vrep bounds for ultrasonic sensor indexing
