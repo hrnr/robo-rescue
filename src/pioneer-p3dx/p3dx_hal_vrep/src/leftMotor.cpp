@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
   n.getParam("tf_prefix", tf_prefix);
   
   // read msg from vrep topic joint state and publishing it to ROS
-  n.subscribe("/vrep/i" + std::to_string(vrep_no) +
+  ros::Subscriber sub_from_vrep=n.subscribe("/vrep/i" + std::to_string(vrep_no) +
                                             "_Pioneer_p3dx_leftMotor/getState",
                                         1000, stateCallback);
   pub_toRos = n.advertise<sensor_msgs::JointState>("getState", 1000);
@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
   ros::Publisher pub_toVrep = n.advertise<std_msgs::Float64>(
       "/vrep/i" + std::to_string(vrep_no) + "_Pioneer_p3dx_leftMotor/setVel",
       1000);
-  n.subscribe("setVel", 1000, velCallback);
+  ros::Subscriber sub_from_ros = n.subscribe("setVel", 1000, velCallback);
   ROS_INFO("HAL(VREP): Left motor publisher to vrep: velocity msg initialized");
 
   // run event loop
