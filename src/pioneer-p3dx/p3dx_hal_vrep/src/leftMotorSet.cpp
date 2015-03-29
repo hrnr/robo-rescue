@@ -19,13 +19,14 @@ int main(int argc, char **argv) {
   ros::NodeHandle n("~");
   int vrep_no = 0; // robot's index in vrep (if multiple instances)
   n.getParam("vrep_index", vrep_no);
-   // read msg from ROS  wheel control topic
-  ros::Subscriber sub_val = n.subscribe("setVel",
-                                        1000, callback_val);
-  
-  publisher = n.advertise<std_msgs::Float64>("/vrep/i" + std::to_string(vrep_no) +"_Pioneer_p3dx_rightMotor/setVel", 1000);
+  // read msg from ROS  wheel control topic
+  ros::Subscriber sub_val = n.subscribe("setVel", 1000, callback_val);
+
+  publisher = n.advertise<std_msgs::Float64>(
+      "/vrep/i" + std::to_string(vrep_no) + "_Pioneer_p3dx_rightMotor/setVel",
+      1000);
   ROS_INFO("HAL(VREP): Left motor publisher to vrep: velocity msg initialized");
-    
+
   // run event loop
   ros::spin();
   return 0;
