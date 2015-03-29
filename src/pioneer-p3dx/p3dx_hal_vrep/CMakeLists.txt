@@ -128,6 +128,18 @@ include_directories(
 add_executable(laser src/laser.cpp)
 target_link_libraries(laser ${catkin_LIBRARIES})
 
+add_executable(rightMotorGet src/rightMotorGet.cpp)
+target_link_libraries(rightMotorGet ${catkin_LIBRARIES})
+
+add_executable(rightMotorSet src/rightMotorSet.cpp)
+target_link_libraries(rightMotorSet ${catkin_LIBRARIES})
+
+add_executable(leftMotorGet src/leftMotorGet.cpp)
+target_link_libraries(leftMotorGet ${catkin_LIBRARIES})
+
+add_executable(leftMotorSet src/leftMotorSet.cpp)
+target_link_libraries(leftMotorSet ${catkin_LIBRARIES})
+
 add_executable(accelerometer src/accelerometer.cpp)
 add_dependencies(accelerometer p3dx_hal_vrep_generate_messages_cpp)
 target_link_libraries(accelerometer ${catkin_LIBRARIES})
