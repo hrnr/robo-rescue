@@ -169,6 +169,9 @@ install(DIRECTORY launch/
 ## Testing ##
 #############
 
+# test all launch files
+roslaunch_add_file_check(launch)
+
 ## Add gtest based cpp test target and link libraries
 # catkin_add_gtest(${PROJECT_NAME}-test test/test_p3dx_dpl.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
