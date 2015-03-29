@@ -9,8 +9,8 @@
 
     <!-- hal members -->
     <node pkg="p3dx_hal_vrep" type="laser" name="laser" respawn="true" />
-    <node pkg="p3dx_hal_vrep" type="accelerometer" name="accelerometerSensors" respawn="true" />
-    <node pkg="p3dx_hal_vrep" type="gyroscope" name="gyroSensors" respawn="true" />
+    <node pkg="p3dx_hal_vrep" type="accelerometer" name="accelerometer" respawn="true" />
+    <node pkg="p3dx_hal_vrep" type="gyroscope" name="gyro" respawn="true" />
     <node pkg="p3dx_hal_vrep" type="ultrasonic" name="ultrasonic" respawn="true" />
   </group>
 </launch>
