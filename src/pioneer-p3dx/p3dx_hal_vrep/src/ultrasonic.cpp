@@ -1,20 +1,24 @@
 #include "ros/ros.h"
-#include "vrep_common/ProximitySensorData.h"
 #include "sensor_msgs/Range.h"
+#include "std_msgs/Float32.h"
 #include <string>
 #include <sstream>
 
-// publisher in HAL for laser
-ros::Publisher publisher;
+// vrep bound for ultrasonic sensor indexing
+#define VREP_LOWER_BOUND 1
+#define VREP_UPPER_BOUND 16
+#define VREP_END VREP_UPPER_BOUND - VREP_LOWER_BOUND + 1
 
-void ultrasonicSensorData_cb(const vrep_common::ProximitySensorData::ConstPtr& msg)
+/**
+ * @brief Callback processing ulrasonic vrep messages
+ * @details Transform vrep ultrasonic message to proper ROS range message
+ * 
+ * @param msg message from vrep
+ * @param index [description]
+ */
+void ultrasonicSensorData_cb(const ros::Publisher& publisher, const std_msgs::Float32::ConstPtr& msg)
 {
-  auto detectedPoint = msg->detectedPoint;
-  auto normalVector = msg->normalVector;
-  // publisher.publish(msg);
-  std::stringstream s;
-  s << detectedPoint << " aaa " << normalVector;
-  ROS_INFO("%s", s.str().c_str());
+  ROS_INFO("received");
 }
 
 int main(int argc, char **argv)
@@ -26,12 +30,36 @@ int main(int argc, char **argv)
   int robot_no = 0; // robot's index in vrep (if multiple instances)
   n.getParam("vrep_index", robot_no);
 
-  // subscribe to ultrasonic messages from vrep
-  ros::Subscriber vrep_subsriber = n.subscribe("/vrep/i" + std::to_string(robot_no) + 
-    "_Pioneer_p3dx_ultrasonicSensor1", 1000, ultrasonicSensorData_cb);
+  // will publish the ultrasonic mesages to the rest of the stack
+  std::vector<ros::Publisher> hal_publishers;
+  hal_publishers.reserve(VREP_END);
+  for (int i = 0; i < VREP_END; ++i)
+  {
+    hal_publishers.push_back(
+      n.advertise<sensor_msgs::Range>(
+        "sensor" + std::to_string(i) + "/Range", 
+        1000));
+  }
 
-  // will publish the laser mesages to the rest of the stack
-  publisher = n.advertise<sensor_msgs::Range>("sensor" + std::to_string(robot_no) + "/Range", 1000);
+  // subscribe to to all ultrasonics from vrep (16)
+  std::vector<ros::Subscriber> vrep_subscribers;
+  vrep_subscribers.reserve(VREP_END);
+
+  auto it = hal_publishers.cbegin();
+  std::size_t vrep_i = VREP_LOWER_BOUND;
+  for (; it != hal_publishers.cend(); ++vrep_i, ++it)
+  {
+    // prepare function for this sensor
+    boost::function<void(const std_msgs::Float32::ConstPtr&)> callback = 
+      std::bind(ultrasonicSensorData_cb, *it, std::placeholders::_1);
+    // subscribe each callback
+    vrep_subscribers.push_back(
+      n.subscribe(
+        "/vrep/i" + std::to_string(robot_no) + "_Pioneer_p3dx_ultrasonicSensor" + std::to_string(vrep_i),
+        1000,
+        callback
+      ));
+  }
 
   ROS_INFO("HAL(VREP): UltrasonicSensor node initialized");
 
