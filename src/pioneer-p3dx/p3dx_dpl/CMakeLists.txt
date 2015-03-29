@@ -4,7 +4,13 @@ project(p3dx_dpl)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  std_msgs
+  geometry_msgs
+  roslaunch
+  tf
+ )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -78,18 +84,28 @@ find_package(catkin REQUIRED)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES p3dx_dpl
-#  CATKIN_DEPENDS other_catkin_pkg
+#  CATKIN_DEPENDS tf
 #  DEPENDS system_lib
 )
 
 ###########
 ## Build ##
 ###########
+# c++11 support required
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+if(COMPILER_SUPPORTS_CXX11)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+else()
+        message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+endif()
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
-
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+)
 ## Declare a cpp library
 # add_library(p3dx_dpl
 #   src/${PROJECT_NAME}/p3dx_dpl.cpp
@@ -97,6 +113,9 @@ catkin_package(
 
 ## Declare a cpp executable
 # add_executable(p3dx_dpl_node src/p3dx_dpl_node.cpp)
+
+add_executable(motor_controler src/motor_controler.cpp)
+target_link_libraries(motor_controler ${catkin_LIBRARIES})
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -110,6 +129,10 @@ catkin_package(
 #############
 ## Install ##
 #############
+
+# install roslaunch files
+install(DIRECTORY launch/
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch)
 
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
