@@ -139,6 +139,9 @@ target_link_libraries(gyroscope ${catkin_LIBRARIES})
 add_executable(ultrasonic src/ultrasonic.cpp)
 target_link_libraries(ultrasonic ${catkin_LIBRARIES})
 
+add_executable(bumper src/bumper.cpp)
+target_link_libraries(bumper ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############
