@@ -1,0 +1,10 @@
+<!-- launch all dpl nodes -->
+<launch>
+  <group ns="dpl">
+    <!-- robot's id in ROS ecosystem -->
+    <param name="robot_id" type="int" value="0" />
+
+    <!-- dpl members -->
+    <node pkg="p3dx_dpl" type="motor_controler" name="motor_ctl" respawn="true" />
+  </group>
+</launch>
