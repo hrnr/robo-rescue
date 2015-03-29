@@ -12,7 +12,6 @@ void laserScanData_cb(const sensor_msgs::LaserScan::ConstPtr& msg)
 
 int main(int argc, char **argv)
 {
-  // @todo work with multiple instances
   ros::init(argc, argv, "laserScan");
   ros::NodeHandle n("~"); // we want relative namespace
 
@@ -21,11 +20,12 @@ int main(int argc, char **argv)
   n.getParam("vrep_index", robot_no);
 
   // subscribe to laser messages from vrep
-  // @todo mltiple instances
   ros::Subscriber vrep_subsriber = n.subscribe("/vrep/i" + std::to_string(robot_no) + 
     "_Pioneer_p3dx_laserScanner", 1000, laserScanData_cb);
+
   // will publish the laser mesages to the rest of the stack
-  publisher = n.advertise<sensor_msgs::LaserScan>("sensor" + std::to_string(robot_no) + "/laser", 1000);
+  // only 1 laserScanner present
+  publisher = n.advertise<sensor_msgs::LaserScan>("sensor0/LaserScan", 1000);
 
   ROS_INFO("HAL(VREP): Laser node initialized");
 
