@@ -49,7 +49,7 @@ find_package(catkin REQUIRED COMPONENTS
  add_message_files(
   FILES
   StampedFloat32Array.msg
-   
+
  )
 
 ## Generate services in the 'srv' folder
@@ -84,7 +84,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES p3dx_hal_vrep
-  CATKIN_DEPENDS roscpp std_msgs sensor_msgs message_runtime
+  CATKIN_DEPENDS roscpp message_runtime
 #  DEPENDS system_lib
 )
 
@@ -129,12 +129,18 @@ add_executable(laser src/laser.cpp)
 target_link_libraries(laser ${catkin_LIBRARIES})
 
 add_executable(accelerometer src/accelerometer.cpp)
-add_dependencies(accelerometer StampedFloat32Array.msg)
+add_dependencies(accelerometer p3dx_hal_vrep_generate_messages_cpp)
 target_link_libraries(accelerometer ${catkin_LIBRARIES})
 
 add_executable(gyroscope src/gyroscope.cpp)
-add_dependencies(gyroscope StampedFloat32Array.msg)
+add_dependencies(gyroscope p3dx_hal_vrep_generate_messages_cpp)
 target_link_libraries(gyroscope ${catkin_LIBRARIES})
+
+add_executable(ultrasonic src/ultrasonic.cpp)
+target_link_libraries(ultrasonic ${catkin_LIBRARIES})
+
+add_executable(bumper src/bumper.cpp)
+target_link_libraries(bumper ${catkin_LIBRARIES})
 
 #############
 ## Install ##

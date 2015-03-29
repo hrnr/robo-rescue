@@ -4,7 +4,9 @@ project(p3dx_urdf_model)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS
+	roslaunch
+)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -111,6 +113,10 @@ catkin_package(
 ## Install ##
 #############
 
+# install roslaunch files
+install(DIRECTORY launch/
+	DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch)
+
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 
@@ -145,6 +151,9 @@ catkin_package(
 #############
 ## Testing ##
 #############
+
+# test all launch files
+roslaunch_add_file_check(launch)
 
 ## Add gtest based cpp test target and link libraries
 # catkin_add_gtest(${PROJECT_NAME}-test test/test_p3dx_urdf_model.cpp)
