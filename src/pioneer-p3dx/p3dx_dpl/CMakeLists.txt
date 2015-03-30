@@ -7,6 +7,7 @@ project(p3dx_dpl)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  sensor_msgs
   geometry_msgs
   roslaunch
   tf
