@@ -2,7 +2,7 @@
 #define GYRO_HAL
 #include "ros/ros.h"
 #include "std_msgs/String.h"
-#include "p3dx_hal_vrep/StampedFloat32Array.h"
+#include "geometry_msgs/Vector3Stamped.h"
 #include <string>
 #include <vector>
 
@@ -12,7 +12,7 @@ ros::Publisher publisher;
 int robot_id = 0;  // robot's index in ROS ecosystem (if multiple instances)
 
 void callback_val(const std_msgs::String::ConstPtr & msg) {
-    std::vector<float> axis_data;
+    std::vector<double> axis_data;
     std::string data=msg->data;
     // linear parser of data in format x;x;x were x is a float
     std::string value=""; // partial data (x)
@@ -33,13 +33,15 @@ void callback_val(const std_msgs::String::ConstPtr & msg) {
         axis_data.resize(3);
     }
     // creating new message
-    p3dx_hal_vrep::StampedFloat32Array msg_out;
+    geometry_msgs::Vector3Stamped msg_out;
     std_msgs::Header header; // creating header
     header.stamp = ros::Time::now(); // current time of data collection
     header.frame_id=std::to_string(robot_id) + "/gyroSensors/sensor0";
     //  fill msg
     msg_out.header = move(header);
-    msg_out.data = move(axis_data);
+    msg_out.vector.x=axis_data[0];
+    msg_out.vector.y=axis_data[1];
+    msg_out.vector.z=axis_data[2];
     // publish vector of floats. One float for each axis X,Y,Z
     publisher.publish( move(msg_out)); 
 }
@@ -56,7 +58,7 @@ int main(int argc, char ** argv) {
     ros::Subscriber sub_val = n.subscribe("/vrep/i" + std::to_string(vrep_no) +
         "_Pioneer_p3dx_GyroSensor", 1000, callback_val);
     // creates publisher in format ./sensor0/axis_data
-    publisher = n.advertise<p3dx_hal_vrep::StampedFloat32Array>("sensor0/axis_data", 1000);
+    publisher = n.advertise<geometry_msgs::Vector3Stamped>("sensor0/axis_data", 1000);
     ROS_INFO("HAL(VREP): Gyroscope node initialized");
     
     // run event loop
