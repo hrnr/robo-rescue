@@ -117,6 +117,9 @@ include_directories(
 add_executable(motor_controler src/motor_controler.cpp)
 target_link_libraries(motor_controler ${catkin_LIBRARIES})
 
+add_executable(imu_provider src/imu_provider.cpp)
+target_link_libraries(imu_provider ${catkin_LIBRARIES})
+
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(p3dx_dpl_node p3dx_dpl_generate_messages_cpp)
