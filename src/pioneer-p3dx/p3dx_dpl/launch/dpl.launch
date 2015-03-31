@@ -4,7 +4,11 @@
     <!-- robot's id in ROS ecosystem -->
     <param name="robot_id" type="int" value="0" />
 
+    <!-- hal is foreign dpl member -->
+    <include file="$(find p3dx_hal_vrep)/launch/hal_vrep.launch" />
+
     <!-- dpl members -->
     <node pkg="p3dx_dpl" type="motor_controler" name="motor_ctl" respawn="true" />
+    <node pkg="p3dx_dpl" type="imu_provider" name="imu_provider" respawn="true" />
   </group>
 </launch>
