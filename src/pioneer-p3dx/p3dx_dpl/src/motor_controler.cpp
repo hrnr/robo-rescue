@@ -8,6 +8,8 @@
 #include <vector>
 #include <cmath>
 
+#define _ . // 1st april fix
+
 // publisher of right and left motor velocity values
 ros::Publisher right_motor_pub;
 ros::Publisher left_motor_pub;
