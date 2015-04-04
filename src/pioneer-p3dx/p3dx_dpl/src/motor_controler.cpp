@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
   }
 
   // read msg from standard ROS topic for receiving Twist commands
-  ros::Subscriber twist_sub = n.subscribe("/cmd_vel", 1000, callback_val);
+  ros::Subscriber twist_sub = n.subscribe(sub_twist, 1000, callback_val);
 
   right_motor_pub = n.advertise<std_msgs::Float64>(pub_right_, 1000);
   left_motor_pub = n.advertise<std_msgs::Float64>(pub_left_, 1000);
