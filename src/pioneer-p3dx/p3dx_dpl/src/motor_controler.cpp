@@ -46,7 +46,7 @@ void callback_val(const geometry_msgs::Twist::ConstPtr &msg) {
 int main(int argc, char **argv) {
   std::string pub_right_ = "hal/rightMotor/setVel";
   std::string pub_left_ = "hal/leftMotor/setVel";
-  std::string sub_twist = "/cmd_vel";
+  std::string sub_twist_topic_ = "/cmd_vel";
   ros::init(argc, argv, "motorControl");
 
   // read  from command line names of topics to publish data
@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
     std::vector<std::string> argv_(argv + 1, argv + argc);
     pub_right_ = argv_[0];
     pub_left_ = argv_[1];
-    if(argc==4) sub_twist = argv_[2];
+    if(argc==4) sub_twist_topic_ = argv_[2];
   }
   // set relative node namespace
   ros::NodeHandle n;
@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
   }
 
   // read msg from standard ROS topic for receiving Twist commands
-  ros::Subscriber twist_sub = n.subscribe(sub_twist, 1000, callback_val);
+  ros::Subscriber twist_sub = n.subscribe(sub_twist_topic_, 1000, callback_val);
 
   right_motor_pub = n.advertise<std_msgs::Float64>(pub_right_, 1000);
   left_motor_pub = n.advertise<std_msgs::Float64>(pub_left_, 1000);
