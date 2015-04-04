@@ -44,15 +44,17 @@ void callback_val(const geometry_msgs::Twist::ConstPtr &msg) {
 }
 
 int main(int argc, char **argv) {
-  std::string pub_right_ = "/hal/rightMotor/setVel";
-  std::string pub_left_ = "/hal/leftMotor/setVel";
+  std::string pub_right_ = "hal/rightMotor/setVel";
+  std::string pub_left_ = "hal/leftMotor/setVel";
+  std::string sub_twist = "/cmd_vel";
   ros::init(argc, argv, "motorControl");
 
   // read  from command line names of topics to publish data
-  if (argc == 3) {
+  if (argc >= 3) {
     std::vector<std::string> argv_(argv + 1, argv + argc);
     pub_right_ = argv_[0];
     pub_left_ = argv_[1];
+    if(argc==4) sub_twist = argv_[2];
   }
   // set relative node namespace
   ros::NodeHandle n;

@@ -5,19 +5,19 @@
 #include "std_msgs/Float64.h"
 #include <string>
 
-// publisher 
+// publisher joint state from vrep to joint state topic in ros
 ros::Publisher pub_toRos;
-// publisher 
+// publisher from ros motor controler to vrep motor controler
 ros::Publisher pub_toVrep;
 // robot's index in ROS ecosystem (if multiple instances)
-std::string tf_prefix = "0";
+int robot_id = 0;
 
 void stateCallback(const sensor_msgs::JointState::ConstPtr &msg) {
 
   sensor_msgs::JointState msg_out;
   std_msgs::Header header;         // creating header
   header.stamp = ros::Time::now(); // current time of data collection
-  header.frame_id = tf_prefix + "/base/joint0";
+  header.frame_id = std::to_string(robot_id) + "/base/joint0";
   // filling new output msg with data from vrep
   msg_out.header = move(header);
   msg_out.effort = msg->effort;
@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
   ros::NodeHandle n("~");
   int vrep_no = 0; // robot's index in vrep (if multiple instances)
   n.getParam("vrep_index", vrep_no);
-  n.getParam("tf_prefix", tf_prefix);
+  n.getParam("robot_id", robot_id);
   
   // read msg from vrep topic joint state and publishing it to ROS
   ros::Subscriber sub_from_vrep=n.subscribe("/vrep/i" + std::to_string(vrep_no) +
@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
   ROS_INFO("HAL(VREP): Left motor state msg publisher node initialized");
 
   // publishing velocity from ROS to vrep
-  ros::Publisher pub_toVrep = n.advertise<std_msgs::Float64>(
+  pub_toVrep = n.advertise<std_msgs::Float64>(
       "/vrep/i" + std::to_string(vrep_no) + "_Pioneer_p3dx_leftMotor/setVel",
       1000);
   ros::Subscriber sub_from_ros = n.subscribe("setVel", 1000, velCallback);
