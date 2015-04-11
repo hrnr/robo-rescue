@@ -82,7 +82,7 @@ int main(int argc, char **argv)
   imu_processor.registerCallback(imuData_cb);
 
   // publish fused message
-  publisher = n.advertise<sensor_msgs::Imu>("Imu", 1000);
+  publisher = n.advertise<sensor_msgs::Imu>("imu_data", 1000);
 
   ROS_INFO("DPL: imuProvider initialized");
 
