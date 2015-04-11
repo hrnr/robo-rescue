@@ -125,6 +125,9 @@ target_link_libraries(imu_provider ${catkin_LIBRARIES})
 add_executable(odometry_provider src/odometry_provider.cpp)
 target_link_libraries(odometry_provider ${catkin_LIBRARIES})
 
+add_executable(odom_tf_broadcaster src/odom_tf_broadcaster.cpp)
+target_link_libraries(odom_tf_broadcaster ${catkin_LIBRARIES})
+
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(p3dx_dpl_node p3dx_dpl_generate_messages_cpp)
