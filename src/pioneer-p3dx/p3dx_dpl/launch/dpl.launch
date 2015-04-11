@@ -10,5 +10,6 @@
     <!-- dpl members -->
     <node pkg="p3dx_dpl" type="motor_controler" name="motor_ctl" respawn="true" />
     <node pkg="p3dx_dpl" type="imu_provider" name="imu_provider" respawn="true" />
+    <node pkg="p3dx_dpl" type="odometry_provider" name="odom_provider" respawn="true" />
   </group>
 </launch>
