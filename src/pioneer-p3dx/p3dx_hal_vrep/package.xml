@@ -47,6 +47,7 @@
   
 
   <run_depend>roscpp</run_depend>
+  <run_depend>p3dx_urdf_model</run_depend>
   
 
   <!-- The export tag contains other, unspecified, tags -->
