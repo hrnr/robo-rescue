@@ -29,7 +29,7 @@ ros::Time last_time;
 
 // calculates inverse kinematic value of robot heading with differencial drive
 double getYaw(const double velRight, const double velLeft) {
-  return WHEEL_RADIUS * (velRight - velLeft) / WHEELS_HALF_SPACING;
+  return WHEEL_RADIUS * (velRight - velLeft) / (2*WHEELS_HALF_SPACING);
 }
 
 void setWheelSpacing() {
@@ -66,8 +66,8 @@ void odomData_cb(const sensor_msgs::JointState::ConstPtr &left_motor_msg,
             (right_motor_msg->velocity[0] + left_motor_msg->velocity[0]) / 2;
   yaw = getYaw(right_motor_msg->velocity[0], left_motor_msg->velocity[0]);
   // move old point in 2D space to new predicted position and an angle
-  pos_x += (x_speed * cos(yaw)) * dt;
-  pos_y += (x_speed * sin(yaw)) * dt;
+  pos_x += (x_speed * cos(pos_th)) * dt;
+  pos_y += (x_speed * sin(pos_th)) * dt;
   pos_th += yaw * dt;
   geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(pos_th);
 
