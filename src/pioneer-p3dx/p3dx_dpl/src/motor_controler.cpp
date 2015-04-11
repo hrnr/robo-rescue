@@ -46,7 +46,7 @@ void callback_val(const geometry_msgs::Twist::ConstPtr &msg) {
 int main(int argc, char **argv) {
   std::string pub_right_ = "hal/rightMotor/setVel";
   std::string pub_left_ = "hal/leftMotor/setVel";
-  std::string sub_twist_topic_ = "/cmd_vel";
+  std::string sub_twist_topic_ = "cmd_vel";
   ros::init(argc, argv, "motorControl");
 
   // read  from command line names of topics to publish data
