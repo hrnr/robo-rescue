@@ -8,7 +8,6 @@
 #include <message_filters/sync_policies/approximate_time.h>
 
 #include <tf/transform_listener.h>
-#include <tf/transform_broadcaster.h>
 
 #include <string>
 #include <utility>
@@ -80,20 +79,7 @@ void odomData_cb(const sensor_msgs::JointState::ConstPtr &left_motor_msg,
   odom_msg.child_frame_id = std::to_string(robot_id) + "/base_link";
   odom_msg.twist.twist.linear.x = x_speed;
   odom_msg.twist.twist.angular.z = yaw;
-
-  // create odom frame id broadcaster to tf tree
-  geometry_msgs::TransformStamped odom_trans;
-  odom_trans.header.stamp = left_motor_msg->header.stamp;
-  odom_trans.header.frame_id = std::to_string(robot_id) + "/odom";
-  odom_trans.child_frame_id = std::to_string(robot_id) + "/base_link";
-  odom_trans.transform.translation.x = pos_x;
-  odom_trans.transform.translation.y = pos_y;
-  odom_trans.transform.translation.z = 0.0;
-  odom_trans.transform.rotation = odom_quat;
-
-  // broadcaster of odom frame_id to /tf
-  tf::TransformBroadcaster odom_broadcaster;
-  odom_broadcaster.sendTransform(std::move(odom_trans));
+ 
   publisher.publish(odom_msg);
 
   last_time = left_motor_msg->header.stamp;
