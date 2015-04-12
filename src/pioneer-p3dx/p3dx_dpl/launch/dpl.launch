@@ -1,9 +1,6 @@
 <!-- launch all dpl nodes -->
 <launch>
   <group ns="dpl">
-    <!-- robot's id in ROS ecosystem -->
-    <param name="robot_id" type="int" value="0" />
-
     <!-- hal is foreign dpl member -->
     <include file="$(find p3dx_hal_vrep)/launch/hal_vrep.launch" />
 

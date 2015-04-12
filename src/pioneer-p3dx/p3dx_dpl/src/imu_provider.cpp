@@ -9,7 +9,7 @@
 #include <utility>
 
 // robot's index in ROS ecosystem (if multiple instances)
-int robot_id = 0;
+std::string tf_prefix;
 
 // publisher in IMU for imu message
 ros::Publisher publisher;
@@ -27,7 +27,7 @@ void imuData_cb(const geometry_msgs::Vector3Stamped::ConstPtr& accel_msg, const 
   sensor_msgs::Imu imu_msg;
   geometry_msgs::Vector3Stamped transformed_vec;
   // target frame for whole message
-  std::string target_frame = std::to_string(robot_id) + "/base_link";
+  std::string target_frame = tf_prefix + "/base_link";
 
   // curently we have no orientation data (missing compass)
   imu_msg.orientation_covariance[0] = -1;
@@ -65,7 +65,11 @@ int main(int argc, char **argv)
   ros::NodeHandle n; // we want relative namespace
 
   // init parameters
-  n.getParam("robot_id", robot_id);
+  std::string tf_prefix_path;
+  if (n.searchParam("tf_prefix", tf_prefix_path))
+  {
+    n.getParam(tf_prefix_path, tf_prefix);
+  }
 
   // initialize tf_listener
   tf::TransformListener tf_listener_;

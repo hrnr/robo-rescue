@@ -1,0 +1,19 @@
+<launch>
+  <arg name="id" default="0" />
+  <arg name="vrep_id" default="$(arg id)" />
+  <group ns="p3dx_$(arg id)">
+    <!-- robot's id in ROS ecosystem -->
+    <param name="tf_prefix" type="string" value="p3dx_$(arg id)" />
+    <param name="vrep_index" type="int" value="$(arg vrep_id)" />
+
+    <!-- run dpl -->
+    <include file="$(find p3dx_dpl)/launch/dpl.launch" />
+
+    <!-- nodes in robot -->
+    <node pkg="gmapping" type="slam_gmapping" name="mapping" respawn="true">
+      <param name="odom_frame" type="string" value="odom" />
+      <param name="base_frame" type="string" value="base_link" />
+      <remap from="scan" to="dpl/hal/laser/sensor0/LaserScan" />
+    </node>
+  </group>
+</launch>

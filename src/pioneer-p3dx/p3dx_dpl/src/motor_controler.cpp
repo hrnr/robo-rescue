@@ -14,7 +14,7 @@ ros::Publisher right_motor_pub;
 ros::Publisher left_motor_pub;
 
 // robot's index in ROS ecosystem (if multiple instances)
-int robot_id = 0;
+std::string tf_prefix;
 double WHEELS_HALF_SPACING = 0;
 double WHEEL_RADIUS = 0.1;
 
@@ -58,18 +58,23 @@ int main(int argc, char **argv) {
   }
   // set relative node namespace
   ros::NodeHandle n;
-  n.getParam("robot_id", robot_id);
+
+  std::string tf_prefix_path;
+  if (n.searchParam("tf_prefix", tf_prefix_path))
+  {
+    n.getParam(tf_prefix_path, tf_prefix);
+  }
 
   // tf listener for calculation of wheel spacing
   tf::TransformListener listener;
   tf::StampedTransform transform;
   // get length in between wheels
   try {
-    listener.waitForTransform(std::to_string(robot_id) + "/base/joint1",
-                              std::to_string(robot_id) + "/base/joint0",
+    listener.waitForTransform(tf_prefix + "/base/joint1",
+                              tf_prefix + "/base/joint0",
                               ros::Time::now(), ros::Duration(3.0));
-    listener.lookupTransform(std::to_string(robot_id) + "/base/joint1",
-                             std::to_string(robot_id) + "/base/joint0",
+    listener.lookupTransform(tf_prefix + "/base/joint1",
+                             tf_prefix + "/base/joint0",
                              ros::Time(0), transform);
     WHEELS_HALF_SPACING = transform.getOrigin().absolute().getY() / 2;
     ROS_INFO("DPL: motor_controler WHEELS_HALF_SPACING: %f",

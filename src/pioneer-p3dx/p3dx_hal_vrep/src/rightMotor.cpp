@@ -10,14 +10,14 @@ ros::Publisher pub_toRos;
 // publisher from ros motor controler to vrep motor controler
 ros::Publisher pub_toVrep;
 // robot's index in ROS ecosystem (if multiple instances)
-int robot_id = 0;
+std::string tf_prefix;
 
 void stateCallback(const sensor_msgs::JointState::ConstPtr &msg) {
 
   sensor_msgs::JointState msg_out;
   std_msgs::Header header;         // creating header
   header.stamp = ros::Time::now(); // current time of data collection
-  header.frame_id = std::to_string(robot_id) + "/base/joint1";
+  header.frame_id = tf_prefix + "/base/joint1";
   // filling new output msg with data from vrep
   msg_out.header = move(header);
   msg_out.effort = msg->effort;
@@ -41,7 +41,12 @@ int main(int argc, char **argv) {
   ros::NodeHandle n("~");
   int vrep_no = 0; // robot's index in vrep (if multiple instances)
   n.getParam("vrep_index", vrep_no);
-  n.getParam("robot_id", robot_id);
+
+  std::string tf_prefix_path;
+  if (n.searchParam("tf_prefix", tf_prefix_path))
+  {
+    n.getParam(tf_prefix_path, tf_prefix);
+  }
   
   // read msg from vrep topic joint state and publishing it to ROS
    ros::Subscriber sub_from_vrep = n.subscribe("/vrep/i" + std::to_string(vrep_no) +

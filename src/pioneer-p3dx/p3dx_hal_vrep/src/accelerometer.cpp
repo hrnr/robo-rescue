@@ -8,7 +8,7 @@
 
 // publisher of Accelerometer data
 ros::Publisher publisher;
-int robot_id = 0;  // robot's index in ROS ecosystem (if multiple instances)
+std::string tf_prefix;  // robot's index in ROS ecosystem (if multiple instances)
 
 void callback_val(const std_msgs::String::ConstPtr &msg) {
   std::vector<double> axis_data;
@@ -35,7 +35,7 @@ void callback_val(const std_msgs::String::ConstPtr &msg) {
   geometry_msgs::Vector3Stamped msg_out;
   std_msgs::Header header; // creating header
   header.stamp = ros::Time::now(); // current time of data collection
-  header.frame_id=std::to_string(robot_id) + "/accelerometerSensors/sensor0";
+  header.frame_id=tf_prefix + "/accelerometerSensors/sensor0";
   //  fill msg
   msg_out.header = move(header);
   msg_out.vector.x=axis_data[0];
@@ -53,7 +53,12 @@ int main(int argc, char **argv) {
   ros::NodeHandle n("~");
   int vrep_no = 0; // robot's index in vrep (if multiple instances)
   n.getParam("vrep_index", vrep_no);
-  n.getParam("robot_id", robot_id);
+
+  std::string tf_prefix_path;
+  if (n.searchParam("tf_prefix", tf_prefix_path))
+  {
+    n.getParam(tf_prefix_path, tf_prefix);
+  }
   // read msg from vrep topic
   ros::Subscriber sub_val = n.subscribe("/vrep/i" + std::to_string(vrep_no) +
                                             "_Pioneer_p3dx_Accelerometer",
