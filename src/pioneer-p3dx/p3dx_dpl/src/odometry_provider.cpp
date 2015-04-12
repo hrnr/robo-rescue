@@ -13,7 +13,7 @@
 #include <utility>
 
 // robot's index in ROS ecosystem (if multiple instances)
-int robot_id = 0;
+std::string tf_prefix = "0";
 
 // publisher in IMU for imu message
 ros::Publisher publisher;
@@ -42,11 +42,11 @@ void setWheelSpacing(const std::string & motor_left_frame,const std::string & mo
   tf::StampedTransform transform;
   // get length in between wheels
   try {
-    listener.waitForTransform(std::to_string(robot_id) + motor_left_frame,
-                              std::to_string(robot_id) + motor_right_frame,
+    listener.waitForTransform(tf_prefix + motor_left_frame,
+                              tf_prefix + motor_right_frame,
                               ros::Time::now(), ros::Duration(3.0));
-    listener.lookupTransform(std::to_string(robot_id) + motor_left_frame,
-                             std::to_string(robot_id) + motor_right_frame,
+    listener.lookupTransform(tf_prefix + motor_left_frame,
+                             tf_prefix + motor_right_frame,
                              ros::Time(0), transform);
     WHEELS_HALF_SPACING = transform.getOrigin().absolute().getY() / 2;
     ROS_INFO("DPL: motor_controler WHEELS_HALF_SPACING: %f",
@@ -76,12 +76,12 @@ void odomData_cb(const sensor_msgs::JointState::ConstPtr &left_motor_msg,
   geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(pos_th);
 
   // create odom msg
-  odom_msg.header.frame_id = std::to_string(robot_id) + odom_frame_id;
+  odom_msg.header.frame_id = tf_prefix + odom_frame_id;
   odom_msg.header.stamp = last_time;
   odom_msg.pose.pose.position.x = pos_x;
   odom_msg.pose.pose.position.y = pos_y;
   odom_msg.pose.pose.orientation = odom_quat;
-  odom_msg.child_frame_id = std::to_string(robot_id) + "/base_link";
+  odom_msg.child_frame_id = tf_prefix + "/base_link";
   odom_msg.twist.twist.linear.x = x_speed;
   odom_msg.twist.twist.angular.z = yaw;
  
@@ -97,7 +97,7 @@ int main(int argc, char **argv) {
   std::string frame_id_right_wheel="/base/joint0";
 
   // get parameters
-  n.getParam("robot_id", robot_id);
+  n.getParam("tf_prefix", tf_prefix);
   n.getParam("leftWheelTopic", odom_left_wheel);
   n.getParam("rightWheelTopic", odom_right_wheel);
   n.getParam("odomPublTopic", odom_publish_topic);
