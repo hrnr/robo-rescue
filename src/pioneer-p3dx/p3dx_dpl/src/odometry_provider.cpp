@@ -26,22 +26,27 @@ double pos_y = 0;
 double pos_th = 0;
 ros::Time last_time;
 
+std::string odom_frame_id="/odom";
+std::string odom_publish_topic="odom";
+std::string odom_right_wheel="hal/rightMotor/getState";
+std::string odom_left_wheel="hal/leftMotor/getState";
+
 // calculates inverse kinematic value of robot heading with differencial drive
 double getYaw(const double velRight, const double velLeft) {
   return WHEEL_RADIUS * (velRight - velLeft) / (2*WHEELS_HALF_SPACING);
 }
 
-void setWheelSpacing() {
+void setWheelSpacing(const std::string & motor_left_frame,const std::string & motor_right_frame) {
   // tf listener for calculation of wheel spacing
   tf::TransformListener listener;
   tf::StampedTransform transform;
   // get length in between wheels
   try {
-    listener.waitForTransform(std::to_string(robot_id) + "/base/joint1",
-                              std::to_string(robot_id) + "/base/joint0",
+    listener.waitForTransform(std::to_string(robot_id) + motor_left_frame,
+                              std::to_string(robot_id) + motor_right_frame,
                               ros::Time::now(), ros::Duration(3.0));
-    listener.lookupTransform(std::to_string(robot_id) + "/base/joint1",
-                             std::to_string(robot_id) + "/base/joint0",
+    listener.lookupTransform(std::to_string(robot_id) + motor_left_frame,
+                             std::to_string(robot_id) + motor_right_frame,
                              ros::Time(0), transform);
     WHEELS_HALF_SPACING = transform.getOrigin().absolute().getY() / 2;
     ROS_INFO("DPL: motor_controler WHEELS_HALF_SPACING: %f",
@@ -71,7 +76,7 @@ void odomData_cb(const sensor_msgs::JointState::ConstPtr &left_motor_msg,
   geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(pos_th);
 
   // create odom msg
-  odom_msg.header.frame_id = std::to_string(robot_id) + "/odom";
+  odom_msg.header.frame_id = std::to_string(robot_id) + odom_frame_id;
   odom_msg.header.stamp = last_time;
   odom_msg.pose.pose.position.x = pos_x;
   odom_msg.pose.pose.position.y = pos_y;
@@ -88,15 +93,26 @@ void odomData_cb(const sensor_msgs::JointState::ConstPtr &left_motor_msg,
 int main(int argc, char **argv) {
   ros::init(argc, argv, "odometryProvider");
   ros::NodeHandle n;
+  std::string frame_id_left_wheel="/base/joint1";
+  std::string frame_id_right_wheel="/base/joint0";
+
+  // get parameters
   n.getParam("robot_id", robot_id);
+  n.getParam("leftWheelTopic", odom_left_wheel);
+  n.getParam("rightWheelTopic", odom_right_wheel);
+  n.getParam("odomPublTopic", odom_publish_topic);
+  n.getParam("frameIDLeftWheel", frame_id_left_wheel);
+  n.getParam("frameIDRightWheel", frame_id_right_wheel);
+  n.getParam("frameIDodom",  odom_frame_id);
+
   last_time = ros::Time::now();
-  setWheelSpacing();
+  setWheelSpacing(frame_id_left_wheel,frame_id_right_wheel);
 
   // subscribers to motors' states and imu
   message_filters::Subscriber<sensor_msgs::JointState> left_motor_sub(
-      n, "hal/leftMotor/getState", 1000);
+      n, odom_left_wheel, 1000);
   message_filters::Subscriber<sensor_msgs::JointState> right_motor_sub(
-      n, "hal/rightMotor/getState", 1000);
+      n, odom_right_wheel, 1000);
 
   // sync messages using approximate alghorithm
   constexpr int allowed_delay = 10;
@@ -107,7 +123,7 @@ int main(int argc, char **argv) {
   odom_processor.registerCallback(odomData_cb);
 
   // publish fused message
-  publisher = n.advertise<nav_msgs::Odometry>("odom", 1000);
+  publisher = n.advertise<nav_msgs::Odometry>(odom_publish_topic, 1000);
 
   ROS_INFO("DPL: imuProvider initialized");
 
