@@ -15,7 +15,7 @@
 #define VREP_MAX_DIST_DETECTION 0.0
 
 // robot's index in ROS ecosystem (if multiple instances)
-int robot_id = 0;  
+std::string tf_prefix;  
 
 /**
  * @brief Callback processing ulrasonic vrep messages
@@ -43,7 +43,7 @@ void bumperSensorData_cb(const ros::Publisher& publisher, std::size_t sensor_n, 
 
   // header
   range_msg.header.stamp = ros::Time::now(); // current time of data collection
-  range_msg.header.frame_id = std::to_string(robot_id) + "/bumperSensors/sensor" + std::to_string(sensor_n);
+  range_msg.header.frame_id = tf_prefix + "/bumperSensors/sensor" + std::to_string(sensor_n);
 
   publisher.publish(std::move(range_msg));
 }
@@ -56,7 +56,7 @@ int main(int argc, char **argv)
   // init parameters
   int vrep_no = 0; // robot's index in vrep (if multiple instances)
   n.getParam("vrep_index", vrep_no);
-  n.getParam("robot_id", robot_id);
+  n.getParam("tf_prefix", tf_prefix);
 
   // will publish the bumper mesages to the rest of the stack
   std::vector<ros::Publisher> hal_publishers;

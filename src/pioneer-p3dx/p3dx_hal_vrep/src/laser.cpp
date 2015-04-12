@@ -7,7 +7,7 @@
 ros::Publisher publisher;
 
 // robot's index in ROS ecosystem (if multiple instances)
-int robot_id = 0;
+std::string tf_prefix;
 
 void laserScanData_cb(const sensor_msgs::LaserScan::ConstPtr& msg)
 {
@@ -15,7 +15,7 @@ void laserScanData_cb(const sensor_msgs::LaserScan::ConstPtr& msg)
 
   // include proper ros time and proper tf info
   laser_msg.header.stamp = ros::Time::now(); // current time of data collection
-  laser_msg.header.frame_id = std::to_string(robot_id) + "/laserSensors/sensor0";
+  laser_msg.header.frame_id = tf_prefix + "/laserSensors/sensor0";
 
   publisher.publish(std::move(laser_msg));
 }
@@ -28,7 +28,7 @@ int main(int argc, char **argv)
   // init parameters
   int vrep_no = 0; // robot's index in vrep (if multiple instances)
   n.getParam("vrep_index", vrep_no);
-  n.getParam("robot_id", robot_id);
+  n.getParam("tf_prefix", tf_prefix);
 
   // subscribe to laser messages from vrep
   ros::Subscriber vrep_subsriber = n.subscribe("/vrep/i" + std::to_string(vrep_no) +
