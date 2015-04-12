@@ -1,12 +1,6 @@
 <!-- launch all hal nodes -->
 <launch>
   <group ns="hal">
-    <!-- vrep robot's index -->
-    <param name="vrep_index" type="int" value="0" />
-
-    <!-- robot's id in ROS ecosystem -->
-    <param name="robot_id" type="int" value="0" />
-
     <!-- p3dx_urdf_model provides hal tf info -->
     <include file="$(find p3dx_urdf_model)/launch/pioneer3dx_urdf.launch" />
 
