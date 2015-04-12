@@ -6,7 +6,7 @@
 
 #define RATE 30
 
-std::string tf_prefix="0";
+std::string tf_prefix;
 double pos_x =0;
 double pos_y =0;
 geometry_msgs::Quaternion odom_quat;
@@ -36,7 +36,12 @@ int main(int argc, char ** argv){
 
   ros::init(argc, argv, "odom_tf_broadcaster");
   ros::NodeHandle n;
-  n.getParam("tf_prefix", tf_prefix);
+
+  std::string tf_prefix_path;
+  if (n.searchParam("tf_prefix", tf_prefix_path))
+  {
+    n.getParam(tf_prefix_path, tf_prefix);
+  }
   n.getParam("frameIDodom",  odom_frame_id);
    // broadcaster of odom frame_id to /tf
   tf::TransformBroadcaster odom_broadcaster;

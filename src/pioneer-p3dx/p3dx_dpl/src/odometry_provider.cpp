@@ -13,7 +13,7 @@
 #include <utility>
 
 // robot's index in ROS ecosystem (if multiple instances)
-std::string tf_prefix = "0";
+std::string tf_prefix;
 
 // publisher in IMU for imu message
 ros::Publisher publisher;
@@ -97,7 +97,11 @@ int main(int argc, char **argv) {
   std::string frame_id_right_wheel="/base/joint0";
 
   // get parameters
-  n.getParam("tf_prefix", tf_prefix);
+  std::string tf_prefix_path;
+  if (n.searchParam("tf_prefix", tf_prefix_path))
+  {
+    n.getParam(tf_prefix_path, tf_prefix);
+  }
   n.getParam("leftWheelTopic", odom_left_wheel);
   n.getParam("rightWheelTopic", odom_right_wheel);
   n.getParam("odomPublTopic", odom_publish_topic);
