@@ -3,7 +3,6 @@
   <arg name="vrep_id" default="$(arg id)" />
   <group ns="p3dx_$(arg id)">
     <!-- robot's id in ROS ecosystem -->
-    <param name="robot_id" type="int" value="$(arg id)" />
     <param name="tf_prefix" type="string" value="p3dx_$(arg id)" />
     <param name="vrep_index" type="int" value="$(arg vrep_id)" />
 
