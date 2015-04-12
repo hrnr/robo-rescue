@@ -53,7 +53,12 @@ int main(int argc, char **argv)
   // init parameters
   int vrep_no = 0; // robot's index in vrep (if multiple instances)
   n.getParam("vrep_index", vrep_no);
-  n.getParam("tf_prefix", tf_prefix);
+
+  std::string tf_prefix_path;
+  if (n.searchParam("tf_prefix", tf_prefix_path))
+  {
+    n.getParam(tf_prefix_path, tf_prefix);
+  }
 
   // will publish the ultrasonic mesages to the rest of the stack
   std::vector<ros::Publisher> hal_publishers;

@@ -65,7 +65,11 @@ int main(int argc, char **argv)
   ros::NodeHandle n; // we want relative namespace
 
   // init parameters
-  n.getParam("tf_prefix", tf_prefix);
+  std::string tf_prefix_path;
+  if (n.searchParam("tf_prefix", tf_prefix_path))
+  {
+    n.getParam(tf_prefix_path, tf_prefix);
+  }
 
   // initialize tf_listener
   tf::TransformListener tf_listener_;

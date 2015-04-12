@@ -58,7 +58,12 @@ int main(int argc, char **argv) {
   }
   // set relative node namespace
   ros::NodeHandle n;
-  n.getParam("tf_prefix", tf_prefix);
+
+  std::string tf_prefix_path;
+  if (n.searchParam("tf_prefix", tf_prefix_path))
+  {
+    n.getParam(tf_prefix_path, tf_prefix);
+  }
 
   // tf listener for calculation of wheel spacing
   tf::TransformListener listener;

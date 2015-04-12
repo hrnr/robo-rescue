@@ -53,7 +53,12 @@ int main(int argc, char ** argv) {
     ros::NodeHandle n("~");
     int vrep_no = 0; // robot's index in vrep (if multiple instances)
     n.getParam("vrep_index", vrep_no);
-    n.getParam("tf_prefix", tf_prefix);
+
+    std::string tf_prefix_path;
+    if (n.searchParam("tf_prefix", tf_prefix_path))
+    {
+        n.getParam(tf_prefix_path, tf_prefix);
+    }
     // read msg from vrep topic
     ros::Subscriber sub_val = n.subscribe("/vrep/i" + std::to_string(vrep_no) +
         "_Pioneer_p3dx_GyroSensor", 1000, callback_val);
