@@ -6,7 +6,7 @@
 
 #define RATE 30
 
-int robot_id=0;
+std::string tf_prefix="0";
 double pos_x =0;
 double pos_y =0;
 geometry_msgs::Quaternion odom_quat;
@@ -23,8 +23,8 @@ void odom_cb(const nav_msgs::Odometry::ConstPtr& msg){
 void time_cb(tf::TransformBroadcaster & odom_broadcast, const ros::TimerEvent& tm){
    geometry_msgs::TransformStamped odom_trans;
    odom_trans.header.stamp = last_time;
-   odom_trans.header.frame_id = std::to_string(robot_id) + odom_frame_id;
-   odom_trans.child_frame_id = std::to_string(robot_id) + "/base_link";
+   odom_trans.header.frame_id = tf_prefix + odom_frame_id;
+   odom_trans.child_frame_id = tf_prefix + "/base_link";
    odom_trans.transform.translation.x = pos_x;
    odom_trans.transform.translation.y = pos_y;
    odom_trans.transform.translation.z = 0.0;
@@ -36,7 +36,7 @@ int main(int argc, char ** argv){
 
   ros::init(argc, argv, "odom_tf_broadcaster");
   ros::NodeHandle n;
-  n.getParam("robot_id", robot_id);
+  n.getParam("tf_prefix", tf_prefix);
   n.getParam("frameIDodom",  odom_frame_id);
    // broadcaster of odom frame_id to /tf
   tf::TransformBroadcaster odom_broadcaster;
