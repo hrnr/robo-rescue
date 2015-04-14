@@ -1,7 +1,7 @@
 <!-- launch all dpl nodes -->
 <launch>
   <group ns="dpl">
-     <!-- hal is foreign dpl member -->
+    <!-- hal is foreign dpl member -->
     <include file="$(find p3dx_hal_vrep)/launch/hal_vrep.launch" />
 
     <!-- dpl members -->
