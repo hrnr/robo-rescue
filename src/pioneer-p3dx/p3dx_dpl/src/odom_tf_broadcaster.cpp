@@ -12,6 +12,7 @@ double pos_y =0;
 geometry_msgs::Quaternion odom_quat;
 ros::Time last_time;
 std::string  odom_frame_id ="/odom";
+std::string odom_subcribe_topic="odom";
 
 
 void odom_cb(const nav_msgs::Odometry::ConstPtr& msg){
@@ -42,7 +43,8 @@ int main(int argc, char ** argv){
   {
     n.getParam(tf_prefix_path, tf_prefix);
   }
-  n.getParam("frameIDodom",  odom_frame_id);
+  ros::param::get("~frameIDodom",  odom_frame_id);
+  ros::param::get("~odomSubsTopic", odom_subcribe_topic);
    // broadcaster of odom frame_id to /tf
   tf::TransformBroadcaster odom_broadcaster;
   geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(0);
@@ -54,7 +56,7 @@ int main(int argc, char ** argv){
   
   // 5 Hz  5 msgs per second
   ros::Timer timer = n.createTimer(ros::Duration(1.0/RATE), std::move(time_callback));
-  ros::Subscriber subsc = n.subscribe("odom", 1000, odom_cb);
+  ros::Subscriber subsc = n.subscribe(odom_subcribe_topic, 1000, odom_cb);
   ros::spin(); 
   
   return 0;

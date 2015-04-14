@@ -7,14 +7,15 @@
     <!-- dpl members -->
     <node pkg="p3dx_dpl" type="motor_controler" name="motor_ctl" respawn="true" />
     <node pkg="p3dx_dpl" type="imu_provider" name="imu_provider" respawn="true" />
-    <node pkg="p3dx_dpl" type="odometry_provider" name="odom_provider" respawn="true" />
-    <node pkg="p3dx_dpl" type="odom_tf_broadcaster" name="odom_tf" respawn="true" />
+    <node pkg="p3dx_dpl" type="odom_tf_broadcaster" name="odom_tf" respawn="true">
+        <param name="frameIDodom" value="/wheel_odom"/>
+        <param name="odomSubsTopic" value="wheel_odom"/>
+    </node>
     <node pkg="p3dx_dpl" type="odometry_provider" name="odom_provider" respawn="true">
         <!-- parameters of wheel odometry setup -->
         <param name="frameIDodom" value="/wheel_odom"/>
         <param name="odomPublTopic" value="wheel_odom"/>
     </node>
-    <!-- <node pkg="p3dx_dpl" type="odom_tf_broadcaster" name="odom_tf" respawn="true" /> -->
 
   </group>
 </launch>

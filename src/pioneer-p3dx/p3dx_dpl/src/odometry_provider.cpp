@@ -102,12 +102,12 @@ int main(int argc, char **argv) {
   {
     n.getParam(tf_prefix_path, tf_prefix);
   }
-  n.getParam("leftWheelTopic", odom_left_wheel);
-  n.getParam("rightWheelTopic", odom_right_wheel);
-  n.getParam("odomPublTopic", odom_publish_topic);
-  n.getParam("frameIDLeftWheel", frame_id_left_wheel);
-  n.getParam("frameIDRightWheel", frame_id_right_wheel);
-  n.getParam("frameIDodom",  odom_frame_id);
+  ros::param::get("~leftWheelTopic", odom_left_wheel);
+  ros::param::get("~rightWheelTopic", odom_right_wheel);
+  ros::param::get("~odomPublTopic", odom_publish_topic);
+  ros::param::get("~frameIDLeftWheel", frame_id_left_wheel);
+  ros::param::get("~frameIDRightWheel", frame_id_right_wheel);
+  ros::param::get("~frameIDodom",  odom_frame_id);
 
   last_time = ros::Time::now();
   setWheelSpacing(frame_id_left_wheel,frame_id_right_wheel);
