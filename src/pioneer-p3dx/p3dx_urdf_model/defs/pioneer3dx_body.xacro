@@ -402,7 +402,7 @@ robot_number is accessed through variable ${robot_id}-->
 	</gazebo>	
 
 	<joint name="${robot_id}laserSensors/0_joint" type="fixed">
-		<origin xyz="0.1498 0 0.05" rpy="0 0 0"/>
+		<origin xyz="0.1498 0 0.05" rpy="0 0 -1.5708"/>
 		<parent link="${robot_id}top_plate"/>
 		<child link="${robot_id}laserSensors/sensor0"/>
 	</joint>		
