@@ -20,13 +20,13 @@
            carry out a predict cycle on the EKF without correcting it. This parameter can be thought of
            as the minimum frequency with which the filter will generate new output. Defaults to 1 / frequency
            if not specified. -->
-      <param name="sensor_timeout" value="0.1"/>  
+      <param name="sensor_timeout" value="0.03"/>  
 
       <!-- If this is set to true, no 3D information will be used in your state estimate. Use this if you
            are operating in a planar environment and want to ignore the effect of small variations in the
            ground plane that might otherwise be detected by, for example, an IMU. Defaults to false if
            unspecified. -->
-      <param name="two_d_mode" value="false"/>
+      <param name="two_d_mode" value="true"/>
 
       <!-- REP-105 (http://www.ros.org/reps/rep-0105.html) specifies three principal coordinate frames: map, 
            odom, and base_link. base_link is the coordinate frame that is affixed to the robot. The robot's 
@@ -110,12 +110,12 @@
       <!-- If your data is subject to outliers, use these threshold settings, expressed as Mahalanobis distances, to control
            how far away from the current vehicle state a sensor measurement is permitted to be. Each defaults to
            numeric_limits<double>::max() if unspecified. -->
-      <!-- <param name="odom0_pose_rejection_threshold" value="5"/>
-      <param name="odom0_twist_rejection_threshold" value="1"/>
+      <!-- <param name="odom0_pose_rejection_threshold" value="5"/> -->
+      <!-- <param name="odom0_twist_rejection_threshold" value="1"/> -->
     
-      <param name="imu0_pose_rejection_threshold" value="0.3"/>
-      <param name="imu0_twist_rejection_threshold" value="0.1"/>
-      <param name="imu0_linear_acceleration_rejection_threshold" value="0.1"/> -->
+      <!-- <param name="imu0_pose_rejection_threshold" value="0.3"/> -->
+      <param name="imu0_twist_rejection_threshold" value="0.2"/>
+      <param name="imu0_linear_acceleration_rejection_threshold" value="0.2"/>
 
       <!-- Debug settings. Not for the faint of heart. Outputs a ludicrous amount of information to the file
            specified by debug_out_file. I hope you like matrices! Defaults to false if unspecified. -->
