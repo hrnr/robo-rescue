@@ -11,8 +11,8 @@
 
     <!-- nodes in robot -->
     <node pkg="gmapping" type="slam_gmapping" name="mapping" respawn="true">
-      <param name="odom_frame" type="string" value="odom" />
-      <param name="base_frame" type="string" value="base_link" />
+      <param name="odom_frame" type="string" value="p3dx_$(arg id)/odom" />
+      <param name="base_frame" type="string" value="p3dx_$(arg id)/base_link" />
       <remap from="scan" to="dpl/hal/laser/sensor0/LaserScan" />
     </node>
   </group>
