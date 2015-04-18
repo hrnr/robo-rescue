@@ -14,7 +14,7 @@
     <node pkg="gmapping" type="slam_gmapping" name="mapping" respawn="true">
       <param name="odom_frame" type="string" value="$(arg tf_prefix)/wheel_odom" />
       <param name="base_frame" type="string" value="$(arg tf_prefix)/base_link" />
-      <param name="map_frame" type="string" value="map" />
+      <param name="map_frame" type="string" value="/$(arg tf_prefix)/map" />
       <remap from="scan" to="dpl/hal/laser/sensor0/LaserScan" />
     </node>
   </group>
