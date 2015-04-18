@@ -9,6 +9,10 @@ ros::Publisher publisher;
 // robot's index in ROS ecosystem (if multiple instances)
 std::string tf_prefix;
 
+// constants for sensor
+#define VREP_MIN_DIST_DETECTION 0.0550
+#define VREP_MAX_DIST_DETECTION 19.9450
+
 void laserScanData_cb(const sensor_msgs::LaserScan::ConstPtr& msg)
 {
   sensor_msgs::LaserScan laser_msg = *msg;
@@ -16,6 +20,13 @@ void laserScanData_cb(const sensor_msgs::LaserScan::ConstPtr& msg)
   // include proper ros time and proper tf info
   laser_msg.header.stamp = ros::Time::now(); // current time of data collection
   laser_msg.header.frame_id = tf_prefix + "/laserSensors/sensor0";
+
+  // set detection ranges
+  laser_msg.range_min = VREP_MIN_DIST_DETECTION;
+  laser_msg.range_max = VREP_MAX_DIST_DETECTION;
+
+  // angle_min, angle_man, angle_increment, scan_time, time_increment
+  // are correctly set in vrep
 
   publisher.publish(std::move(laser_msg));
 }
