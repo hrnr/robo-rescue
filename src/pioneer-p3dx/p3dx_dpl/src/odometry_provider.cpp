@@ -71,12 +71,10 @@ void setWheelSpacing(const std::string & motor_left_frame,const std::string & mo
 double getAngularVel(const double old_steps, const double new_steps, const bool dir,const double dt){
   if(dir && old_steps > 0 && new_steps < 0){
     // overflow from PI --> -PI
-    ROS_INFO("DPL: odometryProvider: from PI --> -PI ");
-    return ((M_PI -old_steps) + (M_PI + new_steps)) / dt;
+    return (2* M_PI - (old_steps - new_steps)) / dt;
   }else if (!dir && old_steps < 0 && new_steps > 0){
     // overflow in negative direction from -PI --> PI
-    ROS_INFO("DPL: odometryProvider: from -PI --> PI ");
-    return ((M_PI -new_steps) + (M_PI + old_steps))/dt;
+    return (-2*M_PI + (new_steps - old_steps)) / dt;
   }
   return (new_steps-old_steps) / dt;
 }
