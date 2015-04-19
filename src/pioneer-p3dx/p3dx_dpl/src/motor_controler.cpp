@@ -16,7 +16,7 @@ ros::Publisher left_motor_pub;
 // robot's index in ROS ecosystem (if multiple instances)
 std::string tf_prefix;
 double WHEELS_HALF_SPACING = 0;
-double WHEEL_RADIUS = 0.1;
+double WHEEL_RADIUS = 0.098;
 
 void callback_val(const geometry_msgs::Twist::ConstPtr &msg) {
 
