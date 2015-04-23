@@ -16,6 +16,6 @@
         <param name="frameIDodom" value="/odom"/>
         <param name="odomPublTopic" value="odom"/>
     </node>
-    <!-- my favorite line: The clear history button in your browser has saved more lives than Superman. -->
+
   </group>
 </launch>
