@@ -11,6 +11,7 @@
 
 #include <string>
 #include <utility>
+#include <math.h>
 
 // robot's index in ROS ecosystem (if multiple instances)
 std::string tf_prefix;
@@ -19,11 +20,15 @@ std::string tf_prefix;
 ros::Publisher publisher;
 
 double WHEELS_HALF_SPACING = 0;
-double WHEEL_RADIUS = 0.1;
+double WHEEL_RADIUS = 0.098;
 
 double pos_x = 0;
 double pos_y = 0;
 double pos_th = 0;
+double left_steps=-5; // range from -PI to PI
+double right_steps=-5;
+bool dir_left = true; // direction of rotation of left wheel true== forward
+bool dir_right = true; // direction of rotation of right wheel true== forward
 ros::Time last_time;
 
 std::string odom_frame_id="/odom";
@@ -33,7 +38,7 @@ std::string odom_left_wheel="hal/leftMotor/getState";
 
 // calculates inverse kinematic value of robot heading with differencial drive
 double getYaw(const double velRight, const double velLeft) {
-  return WHEEL_RADIUS * (velRight - velLeft) / (2*WHEELS_HALF_SPACING);
+  return (WHEEL_RADIUS * (velRight - velLeft)) / (2*WHEELS_HALF_SPACING);
 }
 
 void setWheelSpacing(const std::string & motor_left_frame,const std::string & motor_right_frame) {
@@ -56,19 +61,52 @@ void setWheelSpacing(const std::string & motor_left_frame,const std::string & mo
     ROS_ERROR("Problem with transformation between wheels: %s", ex.what());
   }
 }
+//! @brief Calculates angular velocity from old and new angle on joint
+//! @param[in] old_steps - angle on joint in previous iteration
+//! @param[in] new_steps - current angle on joint
+//! @param[in] dir - direction of rotation true=forward, false = backward
+//! @param[in] dt - time elapsed between measurement of old_steps and new_steps
+//! @return Current angular velocity on the joint
+//!
+double getAngularVel(const double old_steps, const double new_steps, const bool dir,const double dt){
+  if(dir && old_steps > 0 && new_steps < 0){
+    // overflow from PI --> -PI
+    return (2* M_PI - (old_steps - new_steps)) / dt;
+  }else if (!dir && old_steps < 0 && new_steps > 0){
+    // overflow in negative direction from -PI --> PI
+    return (-2*M_PI + (new_steps - old_steps)) / dt;
+  }
+  return (new_steps-old_steps) / dt;
+}
 
 void odomData_cb(const sensor_msgs::JointState::ConstPtr &left_motor_msg,
                  const sensor_msgs::JointState::ConstPtr &right_motor_msg) {
   nav_msgs::Odometry odom_msg;
   double yaw;
   double x_speed;
-  double dt;
+  double dt = (left_motor_msg->header.stamp - last_time).toSec();
+  double left_angular = 0;
+  double right_angular = 0;
+  // calculate andular velocities from angular diplacement in both joints
+  if(left_steps > -4 || right_steps > -4){
+    left_angular = getAngularVel(left_steps, left_motor_msg->position[0],dir_left,dt);
+    right_angular = getAngularVel(right_steps, right_motor_msg->position[0],dir_right,dt);
+  }
+  if(left_angular > 0)
+    dir_left = true;
+  else
+    dir_left = false;
+  if (right_angular > 0)
+    dir_right = true;
+  else
+    dir_right = false;
+  right_steps = right_motor_msg->position[0];
+  left_steps = left_motor_msg->position[0];
+  // calculate robot's forward speed and yaw
+  x_speed = (WHEEL_RADIUS *
+            (left_angular + right_angular)) / 2;
+  yaw = getYaw(right_angular, left_angular);
 
-  dt = (left_motor_msg->header.stamp - last_time).toSec();
-  // y_speed = 0
-  x_speed = WHEEL_RADIUS *
-            (right_motor_msg->velocity[0] + left_motor_msg->velocity[0]) / 2;
-  yaw = getYaw(right_motor_msg->velocity[0], left_motor_msg->velocity[0]);
   // move old point in 2D space to new predicted position and an angle
   pos_x += (x_speed * cos(pos_th)) * dt;
   pos_y += (x_speed * sin(pos_th)) * dt;
@@ -129,7 +167,7 @@ int main(int argc, char **argv) {
   // publish fused message
   publisher = n.advertise<nav_msgs::Odometry>(odom_publish_topic, 1000);
 
-  ROS_INFO("DPL: imuProvider initialized");
+  ROS_INFO("DPL: OdomProvider initialized");
 
   // runs event loop
   ros::spin();
