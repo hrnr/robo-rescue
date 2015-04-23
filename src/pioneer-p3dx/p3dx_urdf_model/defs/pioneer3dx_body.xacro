@@ -65,7 +65,12 @@ robot_number is accessed through variable ${robot_id}-->
 
 
 <!-- *********************************** CHASIS ********************************************** -->
-	<!-- Chassis description -->
+<!-- base_footprint -->
+	<link name="${robot_id}base_footprint"></link>
+	<gazebo reference="${robot_id}base_footprint">
+		<material value="Gazebo/Red"/>
+	</gazebo>
+<!-- Chassis description -->
 	<link name="${robot_id}base_link">
 		<!-- CHECK THESE VALUES. THEY MAY BE COMPLETELY WRONG. -->
 		<inertial>
@@ -95,6 +100,12 @@ robot_number is accessed through variable ${robot_id}-->
 	<gazebo reference="${robot_id}base_link">
 		<material value="Gazebo/Red"/>
 	</gazebo>
+	<joint name="base_link_joint" type="fixed">
+		<origin xyz="0 0 0" rpy="0 0 0"/>
+		<parent link="${robot_id}base_footprint"/>
+		<child link="${robot_id}base_link"/>
+	</joint>
+
 <!-- Top part of the robot -->
 	<link name="${robot_id}top_plate">
 		<inertial>
