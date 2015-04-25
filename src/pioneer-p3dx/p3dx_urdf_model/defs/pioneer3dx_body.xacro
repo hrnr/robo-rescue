@@ -130,7 +130,7 @@ robot_number is accessed through variable ${robot_id}-->
 
 	
 	<joint name="${robot_id}base_top_joint" type="fixed">
-		<origin xyz="-0.0 0 0.24" rpy="0 0 0"/>
+		<origin xyz="0.0 0.0 0.24" rpy="0.0 0.0 0.0"/>
 		<parent link="${robot_id}base_link"/>
 		<child link="${robot_id}top_plate"/>
 	</joint>
