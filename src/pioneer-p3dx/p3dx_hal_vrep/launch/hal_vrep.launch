@@ -1,10 +1,13 @@
 <!-- launch all hal nodes -->
 <launch>
   <group ns="hal">
+    <!-- parametrs -->
+    <param name="/use_sim_time" type="bool" value="true" />
     <!-- p3dx_urdf_model provides hal tf info -->
     <include file="$(find p3dx_urdf_model)/launch/pioneer3dx_urdf.launch" />
 
     <!-- hal members -->
+    <node pkg="p3dx_hal_vrep" type="clockServer" name="clockServer" respawn="true" />
     <node pkg="p3dx_hal_vrep" type="laser" name="laser" respawn="true" />
     <node pkg="p3dx_hal_vrep" type="accelerometer" name="accelerometer" respawn="true" />
     <node pkg="p3dx_hal_vrep" type="gyroscope" name="gyro" respawn="true" />
