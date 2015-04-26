@@ -126,10 +126,23 @@ void odomData_cb(const sensor_msgs::JointState::ConstPtr &left_motor_msg,
   odom_msg.pose.pose.position.x = pos_x;
   odom_msg.pose.pose.position.y = pos_y;
   odom_msg.pose.pose.orientation = odom_quat;
-  odom_msg.child_frame_id = tf_prefix + "/base_link";
+  odom_msg.child_frame_id = tf_prefix + "/base_footprint";
   odom_msg.twist.twist.linear.x = x_speed;
   odom_msg.twist.twist.angular.z = yaw;
-
+  // add covariance
+  double c =10e-4;
+  odom_msg.pose.covariance={c,0,0,0,0,0,
+                            0,c,0,0,0,0,
+                            0,0,c,0,0,0,
+                            0,0,0,c,0,0,
+                            0,0,0,0,c,0,
+                            0,0,0,0,0,c};
+  odom_msg.twist.covariance={c,0,0,0,0,0,
+                             0,c,0,0,0,0,
+                             0,0,c,0,0,0,
+                             0,0,0,c,0,0,
+                             0,0,0,0,c,0,
+                             0,0,0,0,0,c};
   publisher.publish(odom_msg);
 
   last_time = left_motor_msg->header.stamp;
