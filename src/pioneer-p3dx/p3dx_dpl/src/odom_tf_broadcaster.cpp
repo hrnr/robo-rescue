@@ -25,7 +25,7 @@ void time_cb(tf::TransformBroadcaster & odom_broadcast, const ros::TimerEvent& t
    geometry_msgs::TransformStamped odom_trans;
    odom_trans.header.stamp = last_time;
    odom_trans.header.frame_id = tf_prefix + odom_frame_id;
-   odom_trans.child_frame_id = tf_prefix + "/base_link";
+   odom_trans.child_frame_id = tf_prefix + "/base_footprint";
    odom_trans.transform.translation.x = pos_x;
    odom_trans.transform.translation.y = pos_y;
    odom_trans.transform.translation.z = 0.0;

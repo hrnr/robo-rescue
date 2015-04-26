@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   roslaunch
+  vrep_common
 )
 
 ## System dependencies are found with CMake's conventions
@@ -82,7 +83,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES p3dx_hal_vrep
-  CATKIN_DEPENDS roscpp
+  CATKIN_DEPENDS roscpp vrep_common
 #  DEPENDS system_lib
 )
 
@@ -143,6 +144,9 @@ target_link_libraries(ultrasonic ${catkin_LIBRARIES})
 
 add_executable(bumper src/bumper.cpp)
 target_link_libraries(bumper ${catkin_LIBRARIES})
+
+add_executable(clockServer src/clockServer.cpp)
+target_link_libraries(clockServer ${catkin_LIBRARIES})
 
 #############
 ## Install ##

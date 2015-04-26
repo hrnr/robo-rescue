@@ -31,6 +31,9 @@ bool dir_left = true; // direction of rotation of left wheel true== forward
 bool dir_right = true; // direction of rotation of right wheel true== forward
 ros::Time last_time;
 
+double left_angular = 0;
+double right_angular = 0;
+
 std::string odom_frame_id="/odom";
 std::string odom_publish_topic="odom";
 std::string odom_right_wheel="hal/rightMotor/getState";
@@ -85,12 +88,13 @@ void odomData_cb(const sensor_msgs::JointState::ConstPtr &left_motor_msg,
   double yaw;
   double x_speed;
   double dt = (left_motor_msg->header.stamp - last_time).toSec();
-  double left_angular = 0;
-  double right_angular = 0;
+
   // calculate andular velocities from angular diplacement in both joints
   if(left_steps > -4 || right_steps > -4){
-    left_angular = getAngularVel(left_steps, left_motor_msg->position[0],dir_left,dt);
-    right_angular = getAngularVel(right_steps, right_motor_msg->position[0],dir_right,dt);
+    if(dt != 0){
+      left_angular = getAngularVel(left_steps, left_motor_msg->position[0],dir_left,dt);
+      right_angular = getAngularVel(right_steps, right_motor_msg->position[0],dir_right,dt);
+    }
   }
   if(left_angular > 0)
     dir_left = true;
@@ -108,9 +112,12 @@ void odomData_cb(const sensor_msgs::JointState::ConstPtr &left_motor_msg,
   yaw = getYaw(right_angular, left_angular);
 
   // move old point in 2D space to new predicted position and an angle
-  pos_x += (x_speed * cos(pos_th)) * dt;
-  pos_y += (x_speed * sin(pos_th)) * dt;
-  pos_th += yaw * dt;
+  if(dt != 0){
+    pos_x += (x_speed * cos(pos_th)) * dt;
+    pos_y += (x_speed * sin(pos_th)) * dt;
+    pos_th += yaw * dt;
+  }
+
   geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(pos_th);
 
   // create odom msg
@@ -119,10 +126,23 @@ void odomData_cb(const sensor_msgs::JointState::ConstPtr &left_motor_msg,
   odom_msg.pose.pose.position.x = pos_x;
   odom_msg.pose.pose.position.y = pos_y;
   odom_msg.pose.pose.orientation = odom_quat;
-  odom_msg.child_frame_id = tf_prefix + "/base_link";
+  odom_msg.child_frame_id = tf_prefix + "/base_footprint";
   odom_msg.twist.twist.linear.x = x_speed;
   odom_msg.twist.twist.angular.z = yaw;
- 
+  // add covariance
+  double c =10e-4;
+  odom_msg.pose.covariance={c,0,0,0,0,0,
+                            0,c,0,0,0,0,
+                            0,0,c,0,0,0,
+                            0,0,0,c,0,0,
+                            0,0,0,0,c,0,
+                            0,0,0,0,0,c};
+  odom_msg.twist.covariance={c,0,0,0,0,0,
+                             0,c,0,0,0,0,
+                             0,0,c,0,0,0,
+                             0,0,0,c,0,0,
+                             0,0,0,0,c,0,
+                             0,0,0,0,0,c};
   publisher.publish(odom_msg);
 
   last_time = left_motor_msg->header.stamp;
