@@ -1,0 +1,19 @@
+<launch>
+  <arg name="id" default="0" />
+  <arg name="vrep_id" default="$(arg id)" />
+  <arg name="tf_prefix" default="p3dx_$(arg id)" />
+  <group ns="p3dx_$(arg id)">
+    <!-- robot's id in ROS ecosystem -->
+    <param name="tf_prefix" type="string" value="$(arg tf_prefix)" />
+    <param name="vrep_index" type="int" value="$(arg vrep_id)" />
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+      <rosparam file="$(find p3dx_robot)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+      <rosparam file="$(find p3dx_robot)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+      <rosparam file="$(find p3dx_robot)/config/local_costmap_params.yaml" command="load" />
+      <rosparam file="$(find p3dx_robot)/config/global_costmap_params.yaml" command="load" />
+      <rosparam file="$(find p3dx_robot)/config/base_local_planner_params.yaml" command="load" />
+      <remap from="cmd_vel" to="dpl/cmd_vel" />
+    </node>
+  </group>
+</launch>
