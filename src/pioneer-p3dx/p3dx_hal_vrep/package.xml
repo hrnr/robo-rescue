@@ -7,7 +7,7 @@
   <maintainer email="laeqten@gmail.com">Jiri Horner</maintainer>
   <maintainer email="lukas.jelinek1@gmail.com">Lukas Jelinek</maintainer>
   <license>MIT</license>
-
+  <url>http://www.ros.org/wiki/p3dx_hal_vrep</url>
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>roscpp</build_depend>
