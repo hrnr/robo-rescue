@@ -5,10 +5,8 @@
   <description>The p3dx_robot package</description>
 
   <maintainer email="laeqten@gmail.com">Jiri Horner</maintainer>
-
   <license>MIT</license>
 
-  <!-- depends section -->
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>roslaunch</build_depend>
@@ -16,5 +14,4 @@
   <run_depend>p3dx_dpl</run_depend>
   <run_depend>gmapping</run_depend>
   <run_depend>move_base</run_depend>
-  
 </package>
