@@ -19,7 +19,7 @@ std::string tf_prefix;
 // publisher in IMU for imu message
 ros::Publisher publisher;
 
-double WHEELS_HALF_SPACING = 0;
+double WHEELS_HALF_SPACING = 0.15;
 double WHEEL_RADIUS = 0.098;
 
 double pos_x = 0;
@@ -52,7 +52,7 @@ void setWheelSpacing(const std::string & motor_left_frame,const std::string & mo
   try {
     listener.waitForTransform(tf_prefix + motor_left_frame,
                               tf_prefix + motor_right_frame,
-                              ros::Time::now(), ros::Duration(3.0));
+                              ros::Time::now(), ros::Duration(10.0));
     listener.lookupTransform(tf_prefix + motor_left_frame,
                              tf_prefix + motor_right_frame,
                              ros::Time(0), transform);

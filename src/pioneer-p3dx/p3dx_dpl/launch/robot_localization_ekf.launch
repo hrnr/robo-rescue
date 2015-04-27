@@ -51,7 +51,7 @@
       <!-- Defaults to "odom" if unspecified -->
       <param name="odom_frame" value="odom"/>
       <!-- Defaults to "base_link" if unspecified -->
-      <param name="base_link_frame" value="base_link"/>
+      <param name="base_link_frame" value="base_footprint"/>
       <!-- Defaults to the value of "odom_frame" if unspecified -->
       <param name="world_frame" value="p3dx_0/odom"/>
 
@@ -72,14 +72,14 @@
       <rosparam param="odom0_config">[false, false, false, 
                                       false, false, false, 
                                       true,  true, true, 
-                                      false, false, true,
+                                      false, false, false,
                                       false, false, false]</rosparam>
 
       <rosparam param="imu0_config">[false, false, false, 
                                      false,  false,  false, 
                                      false, false, false, 
-                                     true,  true,  true,
-                                     true,  false,  false]</rosparam>
+                                     true, true,  true,
+                                     false, false,  false]</rosparam>
 
       <!-- The best practice for including new sensors in robot_localization's state estimation nodes is to pass in velocity 
            measurements and let the nodoes integrate them. However, this isn't always feasible, and so the state estimation
@@ -89,7 +89,7 @@
            to true. This will carry out differential integration of the sensor data, i.e., it will repeatedly integrate the 
            difference between a given measurement and the previous measurement from that sensor. 
            NOTE: this only applies to sensors that provide absolute measurements, so Twist messages are not supported. -->
-      <param name="odom0_differential" value="false"/>
+      <!-- <param name="odom0_differential" value="false"/> -->
       <param name="imu0_differential" value="false"/>
 
       <!-- If we're including accelerations in our state estimate, then we'll probably want to remove any acceleration that
@@ -104,7 +104,7 @@
 
       <!-- By default, the subscription queue size for each message type is 1. If you wish to increase that so as not
            miss any messages (even if your frequency is set to a relatively small value), increase these. -->
-      <param name="odom0_queue_size" value="2"/>
+      <param name="odom0_queue_size" value="10"/>
       <param name="imu0_queue_size" value="10"/>
 
       <!-- If your data is subject to outliers, use these threshold settings, expressed as Mahalanobis distances, to control
@@ -114,8 +114,8 @@
       <!-- <param name="odom0_twist_rejection_threshold" value="1"/> -->
     
       <!-- <param name="imu0_pose_rejection_threshold" value="0.3"/> -->
-      <param name="imu0_twist_rejection_threshold" value="0.2"/>
-      <param name="imu0_linear_acceleration_rejection_threshold" value="0.2"/>
+      <!-- <param name="imu0_twist_rejection_threshold" value="0.4"/>
+      <param name="imu0_linear_acceleration_rejection_threshold" value="0.4"/> -->
 
       <!-- Debug settings. Not for the faint of heart. Outputs a ludicrous amount of information to the file
            specified by debug_out_file. I hope you like matrices! Defaults to false if unspecified. -->

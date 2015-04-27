@@ -26,11 +26,15 @@ void imuData_cb(const geometry_msgs::Vector3Stamped::ConstPtr& accel_msg, const 
 {
   sensor_msgs::Imu imu_msg;
   geometry_msgs::Vector3Stamped transformed_vec;
+  double c = 10e-4;
   // target frame for whole message
   std::string target_frame = tf_prefix + "/base_link";
 
   // curently we have no orientation data (missing compass)
-  imu_msg.orientation_covariance[0] = -1;
+  c=10e4;
+  imu_msg.orientation_covariance={c,0,0,
+                                  0,c,0,
+                                  0,0,c};
 
   // data from accelerometer, uknown covarince matrix ATM
   try
@@ -38,6 +42,10 @@ void imuData_cb(const geometry_msgs::Vector3Stamped::ConstPtr& accel_msg, const 
     // transform accel data
     tf_listener->transformVector(target_frame, *accel_msg, transformed_vec);
     imu_msg.linear_acceleration = transformed_vec.vector;
+    c =10e-4;
+    imu_msg.linear_acceleration_covariance ={c,0,0,
+                                             0,c,0,
+                                             0,0,c};
   } catch (const tf::TransformException& ex) {
     ROS_WARN("can't transform accelerometer message: %s", ex.what());
   }
@@ -48,6 +56,10 @@ void imuData_cb(const geometry_msgs::Vector3Stamped::ConstPtr& accel_msg, const 
     // transform gyro data
     tf_listener->transformVector(target_frame, *gyro_msg, transformed_vec);
     imu_msg.angular_velocity = transformed_vec.vector;
+    c =10e-4;
+    imu_msg.angular_velocity_covariance ={c,0,0,
+                                          0,c,0,
+                                          0,0,c};
   } catch (const tf::TransformException& ex) {
     ROS_WARN("can't transform gyroscope message: %s", ex.what());
   }

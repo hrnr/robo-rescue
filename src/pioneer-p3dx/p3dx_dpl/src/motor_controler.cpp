@@ -15,7 +15,7 @@ ros::Publisher left_motor_pub;
 
 // robot's index in ROS ecosystem (if multiple instances)
 std::string tf_prefix;
-double WHEELS_HALF_SPACING = 0;
+double WHEELS_HALF_SPACING = 0.15;
 double WHEEL_RADIUS = 0.098;
 
 void callback_val(const geometry_msgs::Twist::ConstPtr &msg) {
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
   try {
     listener.waitForTransform(tf_prefix + "/base/joint1",
                               tf_prefix + "/base/joint0",
-                              ros::Time::now(), ros::Duration(3.0));
+                              ros::Time::now(), ros::Duration(10.0));
     listener.lookupTransform(tf_prefix + "/base/joint1",
                              tf_prefix + "/base/joint0",
                              ros::Time(0), transform);
