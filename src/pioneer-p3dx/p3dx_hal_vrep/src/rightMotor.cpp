@@ -1,5 +1,3 @@
-#ifndef RIGHT_MOTOR_VREP_PUBLISHER
-#define RIGHT_MOTOR_VREP_PUBLISHER
 #include "ros/ros.h"
 #include "sensor_msgs/JointState.h"
 #include "std_msgs/Float64.h"
@@ -66,4 +64,3 @@ int main(int argc, char **argv) {
   ros::spin();
   return 0;
 }
-#endif

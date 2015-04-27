@@ -1,5 +1,3 @@
-#ifndef MOTOR_CONTROLER
-#define MOTOR_CONTROLER
 #include "ros/ros.h"
 #include "ros/console.h"
 #include "std_msgs/Float64.h"
@@ -95,4 +93,3 @@ int main(int argc, char **argv) {
   ros::spin();
   return 0;
 }
-#endif
