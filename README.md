@@ -1,2 +1,90 @@
 # robo-rescue
 ROS nodes for rescue robots
+
+This project brings P3DX robot to [ROS](http://www.ros.org/). It contains
+nodes for ROS which integrates with [VREP](http://www.coppeliarobotics.com/)
+robotic simulator. But its modular design allows easy porting to other
+simulators and even to real robots.
+
+Although whole stack has been designed around VREP, it was designed with real
+robots in mind, and should allow easy porting of algorithms to real robots.
+
+# Building
+
+This project contains standard ROS [catkin](http://wiki.ros.org/catkin)
+packages, which is default build system in recent ROS releases. So to to build
+you need to [install and configure](http://wiki.ros.org/ROS/Installation) your
+ROS environment first.
+
+This steps expects your ROS environment and VREP simulator are installed and configured properly.
+
+Also if you want to use VREP bridge, you need [robo-rescue-simulation-
+vrep](https://github.com/hrnr/robo-rescue-simulation-vrep) (this guide
+includes steps to install it too).
+
+1. clone this repository
+```
+	git clone http://github.com/hrnr/robo-rescue
+```
+
+3. link (or copy) VREP common bridge to your workspace (this is needed to
+communicate with vrep)
+```
+	ln -s <VREP dir>/programming/ros_packages/vrep_common <catkin workspace>/src/vrep_common
+```
+
+4. add project packages to your workspace
+```
+	cp -r robo-rescue/src/* <catkin workspace>/src
+```
+
+5. build your catkin workspace
+```
+	cd <catkin workspace>
+	catkin_make
+```
+
+You may also need to install other ROS packages such as `gmapping` and
+`move_base`. This dependencies can be installed by
+[rosdep](http://wiki.ros.org/rosdep).
+
+# Running `p3dx_robot`
+
+If you have retrieved and built all packages successfully you can run robot
+with these steps.
+
+2. clone repository containing VREP model and test enviroment
+```
+	git clone https://github.com/hrnr/robo-rescue-simulation-vrep
+```
+
+1. run `roscore` (this must be running before VREP)
+```
+	roscore
+```
+
+2. load scene and robot model in vrep
+```
+	File > open scene ... robo-rescue-simulation-vrep/test_scenes/level01.ttt
+	File > load model ... robo-rescue-simulation-vrep/models/pioneer-p3dx.ttm
+```
+
+3. run simulation in VREP (PLAY	button)
+
+4. run P3DX via roslaunch
+```
+	roslaunch p3dx_robot p3dx.launch
+```
+
+That's it, your P3DX robot is running in ROS
+
+You can check that everything is running with `rostopic list` robot topics
+starts with `/p3dx_0` since this is first PD3X in simulation. Check some topic
+with `rostopic echo`, it should publish messages.
+
+Run `rviz` for little demo. Load rviz config file from `src/pioneer-
+p3dx/p3dx_robot/config/p3dx-config.rviz`. Set `2D Nav Goal` to robot, it will
+go to specified location and map its environment. This is how robot looks in
+its initial pose:
+
+![p3dx_robot after installing](doc/rviz-initialpose.png?raw=true "p3dx_robot after installing in its initial pose")
