@@ -1,5 +1,3 @@
-#ifndef GYRO_HAL
-#define GYRO_HAL
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "geometry_msgs/Vector3Stamped.h"
@@ -70,4 +68,3 @@ int main(int argc, char ** argv) {
     ros::spin();
     return 0;
 }
-#endif

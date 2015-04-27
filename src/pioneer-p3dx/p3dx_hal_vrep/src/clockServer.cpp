@@ -1,4 +1,3 @@
-
 #include "ros/ros.h"
 #include "vrep_common/VrepInfo.h"
 #include "rosgraph_msgs/Clock.h"
