@@ -11,16 +11,15 @@
     <include file="$(find p3dx_dpl)/launch/dpl.launch" />
 
     <!-- nodes in robot -->
-    <node pkg="gmapping" type="slam_gmapping" name="mapping" respawn="true">
+    <!-- <node pkg="gmapping" type="slam_gmapping" name="mapping" respawn="true">
       <param name="odom_frame" type="string" value="$(arg tf_prefix)/odom" />
       <param name="base_frame" type="string" value="$(arg tf_prefix)/base_link" />
       <param name="map_frame" type="string" value="/$(arg tf_prefix)/map" />
       <param name="map_frame" type="string" value="/$(arg tf_prefix)/map" />
       <param name="map_update_interval" type="double" value="5.0" />
       <param name="minimumScore" type="double" value="100.0" />
-      <!-- <param name="map_update_interval" type="float" value="1.0" /> -->
       <remap from="scan" to="dpl/hal/laser/sensor0/LaserScan" />
-    </node>
+    </node> -->
 
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
       <rosparam file="$(find p3dx_robot)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
@@ -29,6 +28,44 @@
       <rosparam file="$(find p3dx_robot)/config/global_costmap_params.yaml" command="load" />
       <rosparam file="$(find p3dx_robot)/config/base_local_planner_params.yaml" command="load" />
       <remap from="cmd_vel" to="dpl/cmd_vel" />
+    </node>
+
+    <node pkg="hector_mapping" type="hector_mapping" name="hector_mapping" output="screen">
+    
+      <!-- Topic names -->
+      <param name="scan_topic" value="dpl/hal/laser/sensor0/LaserScan" />    
+    
+      <!-- Frame names -->
+      <param name="base_frame" value="$(arg tf_prefix)/base_footprint" />
+      <param name="odom_frame" value="$(arg tf_prefix)/odom"/>
+      <param name="map_frame" value="$(arg tf_prefix)/map"/>
+      <param name="output_timing" value="false"/>
+    
+      <!-- Tf use -->
+      <param name="use_tf_scan_transformation" value="true"/>
+      <param name="use_tf_pose_start_estimate" value="false"/>
+      <param name="pub_map_odom_transform" value="true"/>
+      <param name="advertise_map_service" value="true"/>
+    
+      <!-- Map size / start point -->
+      <param name="map_resolution" value="0.050"/>
+      <param name="map_size" value="2048"/>
+      <param name="map_start_x" value="0.5"/>
+      <param name="map_start_y" value="0.5" />
+      <param name="map_multi_res_levels" value="2" />
+    
+      <!-- Map update parameters -->
+      <param name="update_factor_free" value="0.4"/>
+      <param name="update_factor_occupied" value="0.9" />    
+      <param name="map_update_distance_thresh" value="0.4"/>
+      <param name="map_update_angle_thresh" value="0.06" />
+      
+      <remap from="/map" to="map" />
+      <!-- Debug parameters -->
+      <!--
+      <param name="pub_drawings" value="true"/>
+      <param name="pub_debug_output" value="true"/>
+    -->
     </node>
   </group>
 </launch>
