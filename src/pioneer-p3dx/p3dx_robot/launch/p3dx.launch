@@ -17,6 +17,7 @@
       <rosparam file="$(find p3dx_robot)/config/local_costmap_params.yaml" command="load" />
       <rosparam file="$(find p3dx_robot)/config/global_costmap_params.yaml" command="load" />
       <rosparam file="$(find p3dx_robot)/config/base_local_planner_params.yaml" command="load" />
+      <param name="controller_frequency" type="double" value="15.0" />
       <remap from="cmd_vel" to="dpl/cmd_vel" />
     </node>
 
