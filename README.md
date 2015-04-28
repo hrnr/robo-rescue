@@ -118,8 +118,8 @@ Messages send as an output from HAL must be time_stamped for use in future calcu
  This layer includes all algorithms needed for successful navigation of robot. It includes SLAM algorithm for map building and localization. It also needs to avoid obstacles and plan robot motion. Lastly This layer will include basic robot AI.
 
  ## TF Tree
-This project use standard ROS TF tree. It is formation of coordinate frames of all vital parts of the robot. Robot model is described in URDF file.  TF uses forward and inverse transformation in between the frames. The main structure of the robot consists of frames: map -> odom -> base_footprint ->
-base_link ->[robot structure ,sensors and actuators].
+This project use standard ROS TF tree. It is formation of coordinate frames of all vital parts of the robot. Robot model is described in URDF file.  TF uses forward and inverse transformation in between the frames. The main structure of the robot consists of frames:
+map -> odom -> base_footprint -> base_link ->[robot structure ,sensors and actuators].
 
 ## Namespaces
 Whole project use same hierarchical approach in naming. All names in [] are dynamically substituted.
@@ -127,3 +127,9 @@ Topics:
  * [robot_id]/topic_name : Algorithms namespace
  * [robot_id]/dpl/topic_name : DPL namespace
  * [robot_id]/dpl/hal/[node_name]/sensor[ID]/data type  :HAL namespace
+
+ # API Documentation
+  * [p3dx_urdf_model](http://wiki.ros.org/p3dx_urdf_model)
+  * [p3dx_hal_vrep](http://wiki.ros.org/p3dx_hal_vrep)
+  * [p3dx_dpl](http://wiki.ros.org/p3dx_dpl)
+  * [p3dx_robot](http://wiki.ros.org/p3dx_robot)
