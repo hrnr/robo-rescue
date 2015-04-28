@@ -2,18 +2,19 @@
 <!--NAMING CONVENTION
 	Robot links use this naming convention:
 	FOR SENSORS: 
-		robot_number/node_name(category of sensors)/sensor + number from 0 to n
+		robot_id/node_name(category of sensors)/sensor + number from 0 to n
 		example:
 			0/ultrasonicSensors/sensor0
 	FOR JOINTS (non fixed):
-		robot_number/node_name(category e.g. arm,base)/joint + number from 0 to n
+		robot_id/node_name(category e.g. arm,base)/joint + number from 0 to n
 		example:
 			0/base/joint0
 	OTHER PARTS:
-		robot_number/part_name
+		robot_id/part_name
 		example:
 			0/top_plate
-robot_number is accessed through variable ${robot_id}-->
+robot_id is accessed through variable ${robot_id}. 
+Robot_number should include / at the end of word. E.g. robot_id = "p3dx/"-->
 
 <robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
 	   xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
