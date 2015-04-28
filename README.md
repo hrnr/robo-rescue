@@ -88,3 +88,22 @@ go to specified location and map its environment. This is how robot looks in
 its initial pose:
 
 ![p3dx_robot after installing](doc/rviz-initialpose.png?raw=true "p3dx_robot after installing in its initial pose")
+
+# Architecture
+![Hierarchy model](doc/Layers.png?raw=true)
+
+This project uses layered architecture to create multiple layers of abstraction. 
+Bottom layer is Hardware Abstraction Layer. With aim to hide maximum of hardware differences. Middle layer (DPL) aggregates multiple data streams from HAL into single data stream. 
+Top layer holds higher algorithms which operate on the whole robot. Thanks to clearly defined layers is this architecture suitable for fast prototyping of robots.
+
+## Hardware Abstraction Layer
+![Hierarchy model](doc/HAL.png?raw=true)
+### Interface robot <-> HAL
+HAL receives raw data from sensors and sends raw low level commands to joints. Data may come from real robots as well as simulation. Nodes of HAL should transform data ,which come from variety of bus interfaces and sensor or actuator types. This layer is therefore uniquely build for each robot depending on its configuration. This layer also holds function of synchronizer. In case of simulation it should set ROS default time to simulated. Otherwise it should time-stamp data with ROS default system time.
+### Interface HAL <-> DPL 
+Messages send as an output from HAL must be time_stamped for use in future calculations. Every message should have set proper ID connecting submitted data with location of sensor on robots body (frame_id). Every time of sensor has predefined type of message which may publish.
+ * Ultrasonic ,IR ,Bumpers : [sensor_msgs/Range](http://docs.ros.org/api/sensor_msgs/html/msg/Range.html)
+ * Laser scanners :  [sensor_msgs/LaserScan](http://docs.ros.org/api/sensor_msgs/html/msg/LaserScan.html)
+ * Joints ,Motors :  [sensor_msgs/JointState](http://docs.ros.org/api/sensor_msgs/html/msg/JointState.html)
+ * Accelerometers, Gyroscopes, Magnetometers : [geometry_msgs/Vector3Stamped](http://docs.ros.org/api/geometry_msgs/html/msg/Vector3Stamped.html)
+ 
