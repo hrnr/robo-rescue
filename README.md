@@ -106,4 +106,15 @@ Messages send as an output from HAL must be time_stamped for use in future calcu
  * Laser scanners :  [sensor_msgs/LaserScan](http://docs.ros.org/api/sensor_msgs/html/msg/LaserScan.html)
  * Joints ,Motors :  [sensor_msgs/JointState](http://docs.ros.org/api/sensor_msgs/html/msg/JointState.html)
  * Accelerometers, Gyroscopes, Magnetometers : [geometry_msgs/Vector3Stamped](http://docs.ros.org/api/geometry_msgs/html/msg/Vector3Stamped.html)
+
+ Our HAL implements abstraction for PioneerP3dx robot simulated in V-rep.
+
+ ## Data Processing Layer
+ ![Hierarchy model](doc/DPL.png?raw=true)
+ DPL aggregates multiple data streams received from HAL. These messages must be fused together to provide overall robot state information. All data should be transformed to robot main frame_ID called base_link and then processed. Output from this stack of ROS packages should be come standardized ROS messages like Odom, PointCloud ,LaserScan. These messages are commonly used in algorithms. This layer also includes passing messages from algorithms to bottom layers. These are mostly represented by Twist commands for movement of the robot. Twist message is translated into angular velocities of robot motors.
+
+ ## Algorithms
+ This layer includes all algorithms needed for successful navigation of robot. It includes SLAM algorithm for map building and localization. It also needs to avoid obstacles and plan robot motion. Lastly This layer will include basic robot AI.
+
+ ## TF TREE
  
