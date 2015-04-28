@@ -111,10 +111,19 @@ Messages send as an output from HAL must be time_stamped for use in future calcu
 
  ## Data Processing Layer
  ![Hierarchy model](doc/DPL.png?raw=true)
+ ### Overview
  DPL aggregates multiple data streams received from HAL. These messages must be fused together to provide overall robot state information. All data should be transformed to robot main frame_ID called base_link and then processed. Output from this stack of ROS packages should be come standardized ROS messages like Odom, PointCloud ,LaserScan. These messages are commonly used in algorithms. This layer also includes passing messages from algorithms to bottom layers. These are mostly represented by Twist commands for movement of the robot. Twist message is translated into angular velocities of robot motors.
 
  ## Algorithms
  This layer includes all algorithms needed for successful navigation of robot. It includes SLAM algorithm for map building and localization. It also needs to avoid obstacles and plan robot motion. Lastly This layer will include basic robot AI.
 
- ## TF TREE
- 
+ ## TF Tree
+This project use standard ROS TF tree. It is formation of coordinate frames of all vital parts of the robot. Robot model is described in URDF file.  TF uses forward and inverse transformation in between the frames. The main structure of the robot consists of frames: map -> odom -> base_footprint ->
+base_link ->[robot structure ,sensors and actuators].
+
+## Namespaces
+Whole project use same hierarchical approach in naming. All names in [] are dynamically substituted.
+Topics:
+ * [robot_id]/topic_name : Algorithms namespace
+ * [robot_id]/dpl/topic_name : DPL namespace
+ * [robot_id]/dpl/hal/[node_name]/sensor[ID]/data type  :HAL namespace
