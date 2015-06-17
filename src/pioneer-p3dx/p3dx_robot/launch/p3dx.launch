@@ -2,13 +2,15 @@
   <arg name="id" default="0" />
   <arg name="vrep_id" default="$(arg id)" />
   <arg name="tf_prefix" default="p3dx_$(arg id)" />
-  <group ns="p3dx_$(arg id)">
+  <group ns="$(arg tf_prefix)">
     <!-- robot's id in ROS ecosystem -->
     <param name="tf_prefix" type="string" value="$(arg tf_prefix)" />
     <param name="vrep_index" type="int" value="$(arg vrep_id)" />
 
     <!-- run dpl -->
-    <include file="$(find p3dx_dpl)/launch/dpl.launch" />
+    <include file="$(find p3dx_dpl)/launch/dpl.launch">
+      <arg name="tf_prefix" value="$(arg tf_prefix)" />
+    </include>
 
     <!-- nodes in robot -->
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
