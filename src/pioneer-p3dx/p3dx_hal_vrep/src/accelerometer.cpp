@@ -49,14 +49,23 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "accelerometerSensors");
   // set relative node namespace
   ros::NodeHandle n("~");
+
+  // init parameters
+  // resolve `tf_prefix` and `vrep_index` in parent namespaces
   int vrep_no = 0; // robot's index in vrep (if multiple instances)
-  n.getParam("vrep_index", vrep_no);
 
   std::string tf_prefix_path;
   if (n.searchParam("tf_prefix", tf_prefix_path))
   {
     n.getParam(tf_prefix_path, tf_prefix);
   }
+
+  std::string vrep_index_path;
+  if (n.searchParam("vrep_index", vrep_index_path))
+  {
+    n.getParam(vrep_index_path, vrep_no);
+  }
+
   // read msg from vrep topic
   ros::Subscriber sub_val = n.subscribe("/vrep/i" + std::to_string(vrep_no) +
                                             "_Pioneer_p3dx_Accelerometer",
