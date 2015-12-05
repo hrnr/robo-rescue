@@ -54,7 +54,7 @@
       <!-- Defaults to "base_link" if unspecified -->
       <param name="base_link_frame" value="base_footprint"/>
       <!-- Defaults to the value of "odom_frame" if unspecified -->
-      <param name="world_frame" value="$(arg tf_prefix)/odom"/>
+      <param name="world_frame" value="odom"/>
 
       <!-- The filter accepts an arbitrary number of inputs from each input message type (Odometry, PoseStamped,
            TwistStamped, Imu). To add a new one, simply append the next number in the sequence to its base name,
