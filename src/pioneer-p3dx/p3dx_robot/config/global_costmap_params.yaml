@@ -3,3 +3,4 @@ global_costmap:
   robot_base_frame: base_link
   static_map: true
   inflation_radius: 0.6
+  track_unknown_space: true
