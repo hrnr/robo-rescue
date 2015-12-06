@@ -1,8 +1,6 @@
 <!-- Launch file for ekf_localization_node -->
 
 <launch>
-    <!-- this file expects `tf_prefix` arg to be declared -->
-    <arg name="tf_prefix" />
     <!-- This node will take in measurements from odometry, IMU, stamped pose, and stamped twist messages. It tracks
          the state of the robot, with the state vector being defined as X position, Y position, Z position,
          roll, pitch, yaw, their respective velocites, and linear acceleration. Units for all measurements are assumed
