@@ -7,7 +7,6 @@
     <include file="$(find p3dx_urdf_model)/launch/pioneer3dx_urdf.launch" />
 
     <!-- hal members -->
-    <node pkg="p3dx_hal_vrep" type="clockServer" name="clockServer" respawn="true" />
     <node pkg="p3dx_hal_vrep" type="laser" name="laser" respawn="true" />
     <node pkg="p3dx_hal_vrep" type="accelerometer" name="accelerometer" respawn="true" />
     <node pkg="p3dx_hal_vrep" type="gyroscope" name="gyro" respawn="true" />

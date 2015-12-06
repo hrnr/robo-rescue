@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="p3dx_hal_vrep" type="clockServer" name="vrep_clock_server" respawn="true" />
+</launch>
