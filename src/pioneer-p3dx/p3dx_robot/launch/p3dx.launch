@@ -8,9 +8,7 @@
     <param name="vrep_index" type="int" value="$(arg vrep_id)" />
 
     <!-- run dpl -->
-    <include file="$(find p3dx_dpl)/launch/dpl.launch">
-      <arg name="tf_prefix" value="$(arg tf_prefix)" />
-    </include>
+    <include file="$(find p3dx_dpl)/launch/dpl.launch" />
 
     <!-- nodes in robot -->
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
