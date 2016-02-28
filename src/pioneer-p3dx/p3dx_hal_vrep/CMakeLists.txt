@@ -64,6 +64,7 @@ add_executable(bumper src/bumper.cpp)
 target_link_libraries(bumper ${catkin_LIBRARIES})
 
 add_executable(clockServer src/clockServer.cpp)
+add_dependencies(clockServer vrep_common_generate_messages_cpp)
 target_link_libraries(clockServer ${catkin_LIBRARIES})
 
 #############
