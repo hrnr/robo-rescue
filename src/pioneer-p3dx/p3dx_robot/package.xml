@@ -14,4 +14,5 @@
   <run_depend>p3dx_dpl</run_depend>
   <run_depend>hector_mapping</run_depend>
   <run_depend>move_base</run_depend>
+  <run_depend>p3dx_hal_vrep</run_depend>
 </package>

@@ -355,7 +355,7 @@ Robot_number should include / at the end of word. E.g. robot_id = "p3dx/"-->
 
 <!-- ******************************SONARS**************************************************** -->
 	<!-- front side sonars -->
-	<property name="sonar_height" value="+0.21"/>
+	<xacro:property name="sonar_height" value="+0.21"/>
 	<sonar id="0" x="0.1064" y="-0.1381" z="${sonar_height}" roll="0" pitch="0" yaw="-1.5708" />
 	<sonar id="1" x="0.1555" y="-0.1202" z="${sonar_height}" roll="0" pitch="0" yaw="${-1.5708+0.6981}" />
 	<sonar id="2" x="+0.1906" y="-0.0785" z="${sonar_height}" roll="0" pitch="0" yaw="${-1.5708+1.0472}" />
@@ -376,7 +376,7 @@ Robot_number should include / at the end of word. E.g. robot_id = "p3dx/"-->
 
 	<!-- *************************BUMPERS****************************************************** -->
 	<!-- front side bumpers -->
-	<property name="bumper_height" value="+0.0681"/>
+	<xacro:property name="bumper_height" value="+0.0681"/>
 	<bumper id="0" x="+0.1767" y="-0.1700" z="${bumper_height}" roll="0" pitch="0" yaw="${-1.5708+0.6210}" />
 	<bumper id="1" x="+0.2377" y="-0.0909" z="${bumper_height}" roll="0" pitch="0" yaw="${-1.5708+1.2318}" />
 	<bumper id="2" x="+0.2549" y="0" z="${bumper_height}" roll="0" pitch="0" yaw="0" />
@@ -384,7 +384,7 @@ Robot_number should include / at the end of word. E.g. robot_id = "p3dx/"-->
 	<bumper id="4" x="+0.1767" y="+0.1700" z="${bumper_height}" roll="0" pitch="0" yaw="${1.5708-0.6007}" />
 
 	<!-- back side bumpers -->
-	<property name="bumper_height" value="+0.0681"/>
+	<xacro:property name="bumper_height" value="+0.0681"/>
 	<bumper id="5" x="-0.1476" y="+0.1712" z="${bumper_height}" roll="0" pitch="0" yaw="${1.5708+0.4465}" />
 	<bumper id="6" x="-0.2259" y="+0.0978" z="${bumper_height}" roll="0" pitch="0" yaw="${1.5708+1.0573}" />
 	<bumper id="7" x="-0.2553" y="0" z="${bumper_height}" roll="0" pitch="0" yaw="${-1.5708 * 2}" />

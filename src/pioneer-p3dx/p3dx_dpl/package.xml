@@ -21,4 +21,5 @@
   <run_depend>roscpp</run_depend>
   <run_depend>tf</run_depend>
   <run_depend>p3dx_hal_vrep</run_depend>
+  <run_depend>robot_localization</run_depend>
 </package>

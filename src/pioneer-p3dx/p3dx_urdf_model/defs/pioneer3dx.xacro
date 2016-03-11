@@ -7,7 +7,7 @@
 	   name="pioneer3dx">
 
 	<!--  SET ROBOT NAME -->
-    <property name="robot_id" value=""/>
+    <xacro:property name="robot_id" value=""/>
 
     <xacro:include filename="$(find p3dx_urdf_model)/defs/pioneer3dx_body.xacro" />
 
