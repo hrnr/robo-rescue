@@ -6,11 +6,8 @@ TrajectoryPlannerROS:
   escape_vel: -0.1
 
   acc_lim_theta: 0.05
-  acc_lim_x: 2.5
-  acc_lim_y: 2.5
+  acc_lim_x: 0.2
+  acc_lim_y: 0.2
 
   holonomic_robot: false
   meter_scoring: true
-  pdist_scale: 0.45
-  gdist_scale: 0.7
-  occdist_scale: 0.5
